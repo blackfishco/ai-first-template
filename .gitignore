@@ -10,8 +10,12 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+# local delivery output
+/tmp/
+/.tmp/
+
+# Generated skill evaluation workspaces remain local; keep skills themselves.
+/.agents/skills/*-workspace/
 
 # next.js
 /.next/

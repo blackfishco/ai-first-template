@@ -1,0 +1,11 @@
+engineStrict: true
+strictDepBuilds: true
+verifyDepsBeforeRun: error
+
+# These packages ship platform binaries as optional dependencies. Their scripts
+# only compile from source or fetch fallback binaries; neither is needed on the
+# supported macOS/Linux environments. Do not permit unreviewed install scripts.
+allowBuilds:
+  '@parcel/watcher': false
+  '@swc/core': false
+  unrs-resolver: false

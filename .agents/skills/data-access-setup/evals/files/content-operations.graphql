@@ -1,0 +1,29 @@
+query Articles($search: String, $after: String) {
+  articles(search: $search, after: $after) {
+    nodes {
+      id
+      slug
+      title
+      publishedAt
+    }
+    nextCursor
+  }
+}
+
+mutation PublishArticle($id: ID!) {
+  publishArticle(id: $id) {
+    id
+    slug
+    title
+    publishedAt
+  }
+}
+
+subscription ArticlePublished {
+  articlePublished {
+    id
+    slug
+    title
+    publishedAt
+  }
+}

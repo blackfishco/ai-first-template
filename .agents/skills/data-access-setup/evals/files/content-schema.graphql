@@ -1,0 +1,26 @@
+scalar DateTime
+
+type Article {
+  id: ID!
+  slug: String!
+  title: String!
+  publishedAt: DateTime
+  internalNotes: String
+}
+
+type ArticleConnection {
+  nodes: [Article!]!
+  nextCursor: String
+}
+
+type Query {
+  articles(search: String, after: String): ArticleConnection!
+}
+
+type Mutation {
+  publishArticle(id: ID!): Article!
+}
+
+type Subscription {
+  articlePublished: Article!
+}

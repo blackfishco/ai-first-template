@@ -1,0 +1,67 @@
+---
+name: typescript-interface-vs-type
+description: Choose TypeScript interface vs type aliases. Use when defining object shapes, class contracts, unions, tuples, function aliases, mapped or conditional types, extension patterns, intersections, declaration merging, or reviewing type style. Prefer interface for object shapes and extends; prefer type for unions and advanced aliases. For broad typing strategy use typescript-best-practices.
+---
+
+# TypeScript: Interface vs Type
+
+## Goal
+
+Use `interface` until `type` features are needed.
+Prefer readable errors and compiler performance.
+
+## Rules
+
+- Use `interface` for object type definitions.
+- Use `interface extends` for extending object shapes.
+- Use `interface` for class contracts.
+- Use `type` for unions, tuples, primitives, mapped types, conditional types, and function aliases.
+- Prefer `interface extends` over object intersections.
+- Avoid intersections when properties may conflict.
+
+## Examples
+
+```ts
+interface User {
+  name: string;
+}
+
+interface Admin extends User {
+  permissions: string[];
+}
+```
+
+```ts
+type Status = "pending" | "approved" | "rejected";
+type Point = [number, number];
+type Handler = (event: Event) => void;
+```
+
+## Why Prefer Extends
+
+- Conflicting properties fail at the definition.
+- Error messages are clearer.
+- Named interfaces are cached by TypeScript.
+- Intersections can be recomputed and harder to debug.
+
+## Avoid
+
+```ts
+type Admin = User & {
+  permissions: string[];
+};
+```
+
+Use this only when intersection semantics are intentional.
+
+## References
+
+- [TypeScript Handbook - Everyday Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html)
+- [TypeScript Performance Wiki](https://github.com/microsoft/TypeScript/wiki/Performance#preferring-interfaces-over-intersections)
+- [Total TypeScript - Intersections vs Interface Extends](https://www.totaltypescript.com/books/total-typescript-essentials/objects#intersections-vs-interface-extends)
+
+## Output
+
+- Recommended declaration form.
+- Reason: object shape, union, tuple, conditional, mapped type, or extension.
+- Any intersection risk.

@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "skills": {
+    "react-hook-form": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-hook-form/SKILL.md",
+      "computedHash": "4e7054e7a222e8bbf72f3bccf9e37909a2422c1f22fb633bbffad09ba7a885e2"
+    },
+    "react-key-prop": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-key-prop/SKILL.md",
+      "computedHash": "4caf2fc6113e3a12265cb7f731f9f583e69b4bce2e2951ec102e9472b7d2cbc7"
+    },
+    "react-query-server-action-errors": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-query-server-action-errors/SKILL.md",
+      "computedHash": "1ace151fad20555dc9dec5f120a18e9bc6d58e97a196c1c51dbe4be454085290"
+    },
+    "react-use-callback": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-use-callback/SKILL.md",
+      "computedHash": "26efce665bc224c088e8fd628925bb83402d6aedaad117ef5c8c8e8b3d22a720"
+    },
+    "react-use-client-boundary": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-use-client-boundary/SKILL.md",
+      "computedHash": "40fa4ec5ca780dae40ed6b7f163a1f516a4567f9b5f9f787d1858a3d68d12f96"
+    },
+    "react-use-state": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-use-state/SKILL.md",
+      "computedHash": "e33ec76f8739a540e8aa6b9063294b04ee57a9b37da4ca955d50afaf5494acf5"
+    },
+    "react-useeffect-avoid": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-useeffect-avoid/SKILL.md",
+      "computedHash": "53bc58d05d902356becc263f12c63c6d46f45ef0307c30b132d9dc99200a5576"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "computedHash": "5ea13a6d9f0d4bb694405d79acd00cadec0d21bb138c4dd10fcf3c500cb835c2"
+    },
+    "typescript-advanced-types": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/typescript-advanced-types/SKILL.md",
+      "computedHash": "7c56b66a6145056377964ddeb0e8440a2a2b93e202884e73a51e7e29a9d3203f"
+    },
+    "typescript-best-practices": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/typescript-best-practices/SKILL.md",
+      "computedHash": "5ef19aaf7ffd3eee77833013ef48bf404eee986345a87a99c83605bbe3280f9d"
+    },
+    "typescript-interface-vs-type": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/typescript-interface-vs-type/SKILL.md",
+      "computedHash": "2d2bcd6037c2a442a0a8ed406f6cb5a664a45211ce059c0c6a4931431079c1dd"
+    },
+    "typescript-react-smell-detector": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/typescript-react-smell-detector/SKILL.md",
+      "computedHash": "8595e1b536df9d785dd3b9056db332de7e39abf71b85fc2b75319be50b00af2f"
+    },
+    "typescript-satisfies-operator": {
+      "source": "flpbalada/fb-skills",
+      "sourceType": "github",
+      "skillPath": "skills/typescript-satisfies-operator/SKILL.md",
+      "computedHash": "7b20651581b1d68c34f9eb31aeb1cdd70b36634661a70655e1d1548b8942ed24"
+    }
+  }
+}

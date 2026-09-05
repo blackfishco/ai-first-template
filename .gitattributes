@@ -1,0 +1,4 @@
+# Exclude generated skill evaluation artifacts from source archives without
+# deleting local work. Skills and their maintained reference docs stay included.
+.agents/skills/*-workspace export-ignore
+.agents/skills/*-workspace/** export-ignore

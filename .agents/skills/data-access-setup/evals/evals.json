@@ -1,0 +1,52 @@
+{
+  "skill_name": "data-access-setup",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Připrav přesný plán pro přidání Payload CMS do této Next.js šablony. Repo neměň. Použij PostgreSQL na Neon, deployment na Vercel, admin kolekci users, kolekce posts a media, drafty pro posts a S3-kompatibilní storage pro media. Veřejnost smí číst jen publikované posts, editory určuje role. Frontend bude data číst hlavně v Server Components. Použij pouze env placeholdery a ulož výstup jako plan.md.",
+      "expected_output": "Read-only, repository-specific production Payload plan with compatible packages, official route/config integration, access-control safeguards, env contract, migration/codegen commands, and verification.",
+      "files": [],
+      "expectations": [
+        "The plan explicitly states that it did not modify the repository or execute install/codegen commands.",
+        "The plan checks compatible matching Payload package versions and Next.js peer requirements instead of blindly using remembered versions.",
+        "The plan covers withPayload, payload.config.ts, the @payload-config alias, the official Payload route group, users/posts/media collections, storage, drafts, and PostgreSQL migrations.",
+        "The plan warns that Payload Local API bypasses access control by default and uses overrideAccess: false for user-scoped operations.",
+        "The plan contains server-only env placeholders, a safe .env.example strategy, and the required .gitignore exception without any real secret.",
+        "The plan includes exact user-run commands and expected verification results for Payload types/import map, migrations, lint, typecheck, build, admin access, and a safe smoke test."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Navrhni přesný read-only plán pro integraci externího Orders REST API v této šabloně. OpenAPI kontrakt je v přiloženém orders-openapi.yaml. API se volá jen na serveru z React Server Components a Server Actions. Používá Bearer service token, má jiné base URL pro development, staging a production a potřebujeme list objednávek, detail a idempotentní změnu stavu. Vygenerovaný klient má být přes Hey API a commitnutý. Repo neupravuj; ulož výstup jako plan.md.",
+      "expected_output": "Repository-specific Hey API plan grounded in the supplied OpenAPI contract, with Node/version checks, server-only auth, generated/client adapter boundaries, typed errors, idempotency, env, drift policy, and verification.",
+      "files": [
+        "evals/files/orders-openapi.yaml"
+      ],
+      "expectations": [
+        "The plan inspects the supplied OpenAPI operations and does not invent endpoints or fields.",
+        "The plan verifies the current Hey API version and Node engine before recommending an exact-pinned generator.",
+        "The plan specifies openapi-ts.config.ts, a generated-only output directory, Fetch client choice, an npm generation script, committed artifacts, and a CI drift check.",
+        "The runtime client and service token remain server-only; no secret is renamed to NEXT_PUBLIC_ or included as a value.",
+        "The plan maps transport failures to typed neverthrow errors, returns minimal DTOs, and addresses timeout, mutation retry, rate limits, and the Idempotency-Key contract.",
+        "The plan does not add TanStack Query without a client-owned server-state need and includes generation, lint, typecheck, tests, build, and smoke-test verification."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Připrav read-only plán pro externí GraphQL Content API. Použij přiložené content-schema.graphql a content-operations.graphql. Schéma v CI se stahuje z chráněného endpointu přes proměnnou CONTENT_SCHEMA_TOKEN, runtime používá uživatelskou HTTP-only cookie. Interaktivní filtrování běží v Client Component přes existující TanStack Query; první data chceme přednačíst na serveru. Potřebujeme query, mutation a do budoucna subscription přes GraphQL over SSE. Použij GraphQL Code Generator client preset a commituj výstup. Repo neměň; ulož plán jako plan.md.",
+      "expected_output": "Repository-specific GraphQL Code Generator plan based on supplied schema/operations, with protected schema generation, client preset, transport split, TanStack Query hydration, subscription blocker/decision, env safety, drift policy, and verification.",
+      "files": [
+        "evals/files/content-schema.graphql",
+        "evals/files/content-operations.graphql"
+      ],
+      "expectations": [
+        "The plan inspects the supplied schema and operations, including custom scalars and query/mutation/subscription requirements, without inventing fields.",
+        "The plan specifies current compatible GraphQL Code Generator packages, client preset config, schema headers via an env variable, document globs excluding generated output, and exact-pinned generator versions.",
+        "The plan separates generation auth from runtime HTTP-only cookie auth and contains no secret values or browser-exposed service credential.",
+        "The plan uses the existing QueryClient for client-owned state and describes server prefetch/hydration without creating a feature-level QueryClient.",
+        "The plan does not claim graphql-request handles subscriptions; it leaves SSE transport selection explicit and does not enable persisted documents without backend support.",
+        "The plan includes committed generated output, a codegen check/drift policy, typed neverthrow errors, cache invalidation, and full verification commands."
+      ]
+    }
+  ]
+}
