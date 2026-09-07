@@ -1,8 +1,10 @@
+import "../globals.css";
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
-import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import "../globals.css";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
+
 import { AppProviders } from "@/app/providers";
 import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
