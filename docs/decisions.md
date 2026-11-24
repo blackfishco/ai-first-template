@@ -2,6 +2,26 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-24 — Locale comes from the root parameter, read through a checked helper (BF-970)
+
+**What.** The site and the CMS admin are two root layouts in route groups: `app/(frontend)/[locale]` and `app/(payload)`. `i18n/request.ts` resolves the locale from the `[locale]` root parameter through `getRootLocale()` in `i18n/root-locale.ts`.
+
+**Why.** Reading the root parameter keeps every page statically rendered without calling `setRequestLocale` in each layout and page. The alternative, next-intl's `requestLocale`, silently turns a route dynamic as soon as a file that receives no params (for example `loading.tsx`) uses translations.
+
+Next.js 16.4 resolves the parameter correctly at runtime but generates no `next/root-params` types for root layouts inside route groups: the generator strips group names, sees the CMS layout as `/`, and treats it as an ancestor of `/[locale]`. The helper therefore treats the module as unknown and checks its shape at runtime.
+
+**Where.** `i18n/root-locale.ts`, `i18n/request.ts`.
+
+**Revisit when.** `.next/types/root-params.d.ts` declares `locale`. Then import it directly and delete the helper.
+
+## 2026-11-24 — Payload runs inside the Next.js app on Postgres (BF-970)
+
+**What.** Payload CMS is part of the same Next.js application. The schema is synced directly only in development (`push`); every other environment applies committed migrations from `payload/migrations`.
+
+**Why.** One deployable unit and the Local API with no network hop. Committed migrations make schema changes reviewable and repeatable; `push` outside development has caused schema drift in earlier projects.
+
+**Where.** `payload.config.ts`, `payload/`, `app/(payload)`.
+
 ## 2026-11-24 — Dependency ceilings (BF-967)
 
 **What.** These packages stay below their latest major:

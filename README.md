@@ -10,12 +10,14 @@ Prerequisites: **Node 24 LTS** (see [`.node-version`](.node-version)) and **pnpm
 node --version       # v24.x
 pnpm --version       # 12.23.0
 pnpm install --frozen-lockfile
+cp .env.example .env   # then set PAYLOAD_SECRET (openssl rand -hex 32)
+docker compose up -d   # local Postgres matching DATABASE_URL in .env.example
 pnpm dev
 ```
 
-Open [http://localhost:3000/cs](http://localhost:3000/cs). The removable task demo and small component gallery are at [http://localhost:3000/cs/example](http://localhost:3000/cs/example).
+Open [http://localhost:3000/cs](http://localhost:3000/cs). The CMS admin is at [http://localhost:3000/admin](http://localhost:3000/admin); the first visit creates the first user. The removable task demo and small component gallery are at [http://localhost:3000/cs/example](http://localhost:3000/cs/example).
 
-No account, database, external API, or secret environment variable is needed. Demo additions exist only in that page's local state: refreshing restores the initial tasks. The server validates additions but does **not** persist them or share them between visitors.
+The app needs a Postgres database and the variables in [`.env.example`](.env.example); it stops at startup and names any variable that is missing or malformed. Any Postgres works in place of Docker: point `DATABASE_URL` at it. Demo additions exist only in that page's local state: refreshing restores the initial tasks. The server validates additions but does **not** persist them or share them between visitors.
 
 `pnpm-lock.yaml` is the only dependency lockfile. Use `pnpm add` for intentional dependency changes and commit the updated manifest and lockfile together. Do not hand-edit the lockfile or broadly allow dependency build scripts; review individual entries in `pnpm-workspace.yaml`.
 
@@ -29,6 +31,9 @@ No account, database, external API, or secret environment variable is needed. De
 | `pnpm build` | Production build |
 | `pnpm test:e2e` | Playwright tests against the production build |
 | `pnpm start` | Serve an existing production build |
+| `pnpm payload migrate` | Apply committed database migrations |
+| `pnpm payload migrate:create <name>` | Create a migration after a schema change |
+| `pnpm generate:types` | Regenerate `payload-types.ts` |
 
 For a full local check:
 

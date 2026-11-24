@@ -17,6 +17,12 @@ export const serverEnvSchema = z.object({
     .url({ protocol: /^https?$/ })
     .refine((value) => !value.endsWith("/"), "must not end with a slash")
     .default("http://localhost:3000"),
+
+  // Postgres connection string. Use a separate database (or database branch)
+  // for every environment; see docs/architecture.md.
+  DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
+  // Signs Payload auth tokens. Use a different value in every environment.
+  PAYLOAD_SECRET: z.string().min(32),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
