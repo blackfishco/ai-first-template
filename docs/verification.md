@@ -17,7 +17,7 @@ pnpm test:e2e
 
 For UI, routing, form, focus, or shared styling changes, run `pnpm start` after a fresh build and manually check the affected routes:
 
-- `/` and `/en`: starter content, navigation, and the language switcher.
+- `/` and `/en` after a seed: the home page, header navigation, and the language switcher.
 - A page with the contact form block: errors at each field, a failed send keeping what was typed, and the confirmation after a successful send.
 - Shared UI: desktop and mobile layouts, keyboard navigation, focus handling, accessible names, dialogs, calendar, and toast feedback.
 
@@ -42,8 +42,8 @@ Record the repository, target branch, rule, required status, and verification ev
 For a published revision:
 
 ```sh
-git clone <repository-url> vitek-template-check
-cd vitek-template-check
+git clone <repository-url> template-check
+cd template-check
 node --version
 pnpm --version
 pnpm install --frozen-lockfile
@@ -52,7 +52,7 @@ pnpm test
 pnpm build
 ```
 
-Use the [README prerequisites](../README.md#start). Confirm the lockfile is unchanged. Run `pnpm dev`, open `/` and `/admin`, and stop the server afterwards. No existing `.next/`, `node_modules/`, `.env` secrets, or undocumented files should be needed. Builds may require network access for configured `next/font` fonts; do not confuse blocked font downloads with a verified offline build.
+Use the [README prerequisites](../README.md#start). Confirm the lockfile is unchanged. Run `pnpm payload migrate` and `pnpm dev`, open `/` and `/admin`, and stop the server afterwards. No existing `.next/`, `node_modules/`, `.env` secrets, or undocumented files should be needed. Builds may require network access for configured `next/font` fonts; do not confuse blocked font downloads with a verified offline build.
 
 Before there is a publishable commit, a coordinator may snapshot tracked **and intended untracked source** into a temporary directory, initialize a standalone temporary repository, and clone that snapshot. Do not create a worktree or commit the user's working checkout for this purpose. Exclude `.git`, dependencies, build/cache output, secrets, and local skill evaluation workspaces. A snapshot check is not proof of a later published commit; repeat against the final distribution.
 

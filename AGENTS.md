@@ -99,6 +99,7 @@ Delete the example and add the project's rules as they appear. Keep this section
 Skills live in `.agents/skills/` and are linked into `.claude/skills/`. Read the matching `SKILL.md` before the work it covers.
 
 - `payload`: anything in `payload/`, `payload.config.ts`, migrations, or code that reads CMS content. It wins over other skills on Payload questions.
+- `new-project`: turning a fresh copy of this template into a named project.
 - `data-access-setup`: planning a new external data source or API client. It produces a plan and changes no files.
 - `react-hook-form`: building or changing a form.
 - `react-query-server-action-errors`: a Server Action whose expected errors reach the interface.
