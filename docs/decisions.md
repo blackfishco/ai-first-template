@@ -2,6 +2,32 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-24 — CMS data is cached with `unstable_cache` and tags (BF-977)
+
+**What.** Published CMS content is cached with `unstable_cache`, tagged from one registry, and revalidated by CMS hooks with `revalidateTag(tag, { expire: 0 })`. Cache keys include the deployment id. Drafts are never cached.
+
+**Why.** The alternative, the `use cache` directive, requires opting the whole app into Cache Components, which changes rendering for every route including the CMS admin. The installed Next.js docs still recommend `unstable_cache` for non-`fetch` data that must persist across deployments. `expire: 0` makes an editor's save visible on the next request instead of serving the stale copy once. The deployment id in the key keeps a new deployment from reading entries an older one cached in a different shape.
+
+**Where.** `lib/cache-tags.ts`, `lib/cache-key.ts`, `lib/cms/revalidate.ts`, `payload/hooks/revalidate.ts`, loaders in `features/*/server/`.
+
+**Revisit when.** Cache Components is verified with Payload's admin and next-intl, and `use cache` entries persist across deployments.
+
+## 2026-11-24 — Pages render on first request, not at build time (BF-974)
+
+**What.** `generateStaticParams` for CMS pages returns an empty list. A page is rendered on its first request and then served from the cache until an editor changes it. Pages are not nested: one slug, one segment.
+
+**Why.** A build then needs no content, so a new project and CI build against an empty database. Nested pages need breadcrumb-based lookups and URL building in every link; earlier projects got those wrong, so nesting is left to the project that needs it.
+
+**Where.** `app/(frontend)/[locale]/[...slug]/page.tsx`, `features/pages/server/get-page.ts`.
+
+## 2026-11-24 — The task example stays until the contact form replaces it (BF-974)
+
+**What.** `features/example` is kept for now. The home page shows the CMS page with the slug `home` and falls back to the starter page while that page does not exist.
+
+**Why.** The example is the reference for the Server Action and error contract in `docs/architecture.md`. Removing it before the contact form (BF-981) exists would leave that contract without a working example.
+
+**Where.** `app/(frontend)/[locale]/page.tsx`, `features/example/`.
+
 ## 2026-11-24 — Locale comes from the root parameter, read through a checked helper (BF-970)
 
 **What.** The site and the CMS admin are two root layouts in route groups: `app/(frontend)/[locale]` and `app/(payload)`. `i18n/request.ts` resolves the locale from the `[locale]` root parameter through `getRootLocale()` in `i18n/root-locale.ts`.

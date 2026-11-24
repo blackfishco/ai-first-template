@@ -15,6 +15,8 @@ export default defineConfig({
   use: {
     baseURL,
     trace: "off",
+    // The site redirects by browser language; tests start in the default one.
+    locale: "cs-CZ",
   },
   projects: [
     {
@@ -28,8 +30,10 @@ export default defineConfig({
   // Tests run against the production build, not the dev server.
   webServer: {
     command: `pnpm start --port ${port}`,
-    url: `${baseURL}/cs`,
+    url: baseURL,
     reuseExistingServer: !process.env.CI,
+    // Fixed test-only secret; e2e/preview.spec.ts uses the same value.
+    env: { PREVIEW_SECRET: "e2e-preview-secret-0000000000000000" },
     timeout: 60_000,
   },
 });

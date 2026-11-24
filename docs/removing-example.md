@@ -8,7 +8,7 @@ This removes teaching content, not the shared design system. Try the procedure i
 - `features/example/`
 - `components/examples/example-gallery.tsx`
 - `components/examples/gallery-interactions.tsx`
-- `messages/example.cs.json`
+- `messages/example.cs.json` and `messages/example.en.json`
 
 Leave any later unrelated files in `components/examples/` intact. Keep lint, type checks, and CI.
 
@@ -16,7 +16,7 @@ Leave any later unrelated files in `components/examples/` intact. Keep lint, typ
 
 In `i18n/request.ts`:
 
-- Remove `import exampleMessages from "@/messages/example.cs.json"`.
+- In `i18n/messages.ts`, remove the two `example.*` imports and their spreads.
 - Replace `messages: { ...csMessages, ...exampleMessages }` with `messages: csMessages`.
 - Keep locale validation and the remaining configuration unchanged.
 

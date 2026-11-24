@@ -1,15 +1,17 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { ExampleGallery } from "@/components/examples/example-gallery";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
 import { TasksDemo } from "@/features/example/components/tasks-demo";
 import { getDemoTasks } from "@/features/example/server/demo-tasks";
+import { DEFAULT_LOCALE, isLocale } from "@/i18n/config";
 import { Link } from "@/i18n/navigation";
 
 export default async function ExamplePage() {
   const t = await getTranslations("Example");
-  const tasks = getDemoTasks();
+  const locale = await getLocale();
+  const tasks = getDemoTasks(isLocale(locale) ? locale : DEFAULT_LOCALE);
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-6 py-12">

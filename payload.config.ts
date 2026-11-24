@@ -8,8 +8,16 @@ import { en } from "@payloadcms/translations/languages/en";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 
+import { DEFAULT_LOCALE, LOCALE_LABELS, LOCALES } from "./i18n/config";
+import { isAuthorizedBearer, previewPath, previewUrl } from "./lib/cms/preview";
 import { loadServerEnv } from "./lib/env-schema";
+import { hasRole } from "./payload/access/roles";
+import { ADMIN_TITLE_SUFFIX } from "./payload/admin/branding";
+import { Media } from "./payload/collections/media";
+import { Pages } from "./payload/collections/pages";
 import { Users } from "./payload/collections/users";
+import { SiteSettings } from "./payload/globals/site-settings";
+import { mediaStorage } from "./payload/plugins/storage";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -25,8 +33,36 @@ export default buildConfig({
     importMap: {
       baseDir: dirname,
     },
+    meta: { titleSuffix: ` ${ADMIN_TITLE_SUFFIX}` },
+    // Draft preview next to the editing form. Off without PREVIEW_SECRET.
+    livePreview: {
+      collections: [Pages.slug],
+      breakpoints: [
+        { name: "mobile", label: "Mobile", width: 375, height: 667 },
+        { name: "tablet", label: "Tablet", width: 768, height: 1024 },
+        { name: "desktop", label: "Desktop", width: 1440, height: 900 },
+      ],
+      url: ({ collectionConfig, data, locale }) => {
+        const slug: unknown = data.slug;
+        const path = previewPath({
+          collection: collectionConfig?.slug,
+          slug: typeof slug === "string" ? slug : null,
+          locale: locale.code,
+        });
+        return env.PREVIEW_SECRET && path
+          ? previewUrl(path, env.PREVIEW_SECRET, env.SITE_URL)
+          : null;
+      },
+    },
+    components: {
+      graphics: {
+        Logo: "/payload/admin/branding#Logo",
+        Icon: "/payload/admin/branding#Icon",
+      },
+    },
   },
-  collections: [Users],
+  collections: [Pages, Media, Users],
+  globals: [SiteSettings],
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: { connectionString: env.DATABASE_URL },
@@ -35,12 +71,29 @@ export default buildConfig({
     // committed migrations only; see docs/architecture.md.
     push: env.NODE_ENV === "development",
   }),
+  // Content languages; the same list drives the site's routing.
+  localization: {
+    locales: LOCALES.map((code) => ({ code, label: LOCALE_LABELS[code] })),
+    defaultLocale: DEFAULT_LOCALE,
+    fallback: true,
+  },
+  // Languages of the admin interface.
   i18n: {
     supportedLanguages: { cs, en },
     fallbackLanguage: "cs",
+  },
+  // Scheduled publishing runs as a job. The endpoint accepts the cron bearer
+  // token or a signed-in admin; see vercel.json for the schedule.
+  jobs: {
+    access: {
+      run: ({ req }) =>
+        hasRole(req.user, "admin") ||
+        isAuthorizedBearer(req.headers.get("authorization"), env.CRON_SECRET),
+    },
   },
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
   sharp,
+  plugins: [mediaStorage(env.BLOB_READ_WRITE_TOKEN)],
 });

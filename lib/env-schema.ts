@@ -12,6 +12,9 @@ export const serverEnvSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   // Set automatically by Vercel; absent locally and in CI.
   VERCEL_ENV: z.enum(["development", "preview", "production"]).optional(),
+  // Set automatically by Vercel at runtime; part of cache keys (lib/cache-key.ts).
+  VERCEL_DEPLOYMENT_ID: z.string().min(1).optional(),
+  VERCEL_GIT_COMMIT_SHA: z.string().min(1).optional(),
   // Canonical origin without a trailing slash, e.g. https://example.com
   SITE_URL: z
     .url({ protocol: /^https?$/ })
@@ -23,6 +26,14 @@ export const serverEnvSchema = z.object({
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
   // Signs Payload auth tokens. Use a different value in every environment.
   PAYLOAD_SECRET: z.string().min(32),
+  // Shared secret of the CMS live preview. Without it preview is off and the
+  // preview route rejects every request.
+  PREVIEW_SECRET: z.string().min(32).optional(),
+  // Bearer token of scheduled jobs (Vercel Cron sends it automatically).
+  // Without it the jobs endpoint accepts signed-in admins only.
+  CRON_SECRET: z.string().min(16).optional(),
+  // Vercel Blob read-write token. Without it uploads stay on local disk.
+  BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

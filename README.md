@@ -1,6 +1,6 @@
 # Vitek template
 
-Next.js App Router template for AI-assisted development, with strict TypeScript, shadcn/Base UI, Czech translations, and automated checks. Start with the existing patterns rather than adding a framework around each feature.
+Next.js App Router template for AI-assisted development, with strict TypeScript, shadcn/Base UI, Payload CMS, Czech and English translations, and automated checks. Start with the existing patterns rather than adding a framework around each feature.
 
 ## Start
 
@@ -15,7 +15,7 @@ docker compose up -d   # local Postgres matching DATABASE_URL in .env.example
 pnpm dev
 ```
 
-Open [http://localhost:3000/cs](http://localhost:3000/cs). The CMS admin is at [http://localhost:3000/admin](http://localhost:3000/admin); the first visit creates the first user. The removable task demo and small component gallery are at [http://localhost:3000/cs/example](http://localhost:3000/cs/example).
+Open [http://localhost:3000](http://localhost:3000). The CMS admin is at [http://localhost:3000/admin](http://localhost:3000/admin); the first visit creates the first user. The removable task demo and small component gallery are at [http://localhost:3000/example](http://localhost:3000/example).
 
 The app needs a Postgres database and the variables in [`.env.example`](.env.example); it stops at startup and names any variable that is missing or malformed. Any Postgres works in place of Docker: point `DATABASE_URL` at it. Demo additions exist only in that page's local state: refreshing restores the initial tasks. The server validates additions but does **not** persist them or share them between visitors.
 
@@ -59,7 +59,8 @@ Unit tests sit next to the code as `*.test.ts`; end-to-end tests are in `e2e/`. 
 | Reference feature | [`features/example/`](features/example/) |
 | Demo route | [`app/(frontend)/[locale]/example/`](app/(frontend)/[locale]/example/) |
 | Small gallery and interactions | [`components/examples/example-gallery.tsx`](components/examples/example-gallery.tsx), [`components/examples/gallery-interactions.tsx`](components/examples/gallery-interactions.tsx) |
-| Czech UI text | [`messages/cs.json`](messages/cs.json), [`messages/example.cs.json`](messages/example.cs.json) |
+| UI text | [`messages/cs.json`](messages/cs.json), [`messages/en.json`](messages/en.json) and the `example.*` files |
+| Languages | [`i18n/config.ts`](i18n/config.ts) |
 | Locale setup/message composition | [`i18n/routing.ts`](i18n/routing.ts), [`i18n/request.ts`](i18n/request.ts) |
 | Query and toast providers | [`app/providers.tsx`](app/providers.tsx) |
 
