@@ -12,6 +12,9 @@ export const serverEnvSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   // Set automatically by Vercel; absent locally and in CI.
   VERCEL_ENV: z.enum(["development", "preview", "production"]).optional(),
+  // Set automatically by Vercel at runtime; part of cache keys (lib/cache-key.ts).
+  VERCEL_DEPLOYMENT_ID: z.string().min(1).optional(),
+  VERCEL_GIT_COMMIT_SHA: z.string().min(1).optional(),
   // Canonical origin without a trailing slash, e.g. https://example.com
   SITE_URL: z
     .url({ protocol: /^https?$/ })
