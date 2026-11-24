@@ -7,7 +7,7 @@ Next.js App Router template for AI-assisted development, with strict TypeScript,
 Prerequisites: **Node 24 LTS** (see [`.node-version`](.node-version)) and **pnpm 12.23.0** (see [`package.json`](package.json)). Select Node with your runtime manager; install pnpm following its [official installation guide](https://pnpm.io/installation), selecting this exact version. Do not change the machine's global runtime merely to run this project.
 
 ```sh
-node --version       # v24.x
+node --version       # v24.22.3 or newer 24.x
 pnpm --version       # 12.23.0
 pnpm install --frozen-lockfile
 cp .env.example .env   # then set PAYLOAD_SECRET (openssl rand -hex 32)
