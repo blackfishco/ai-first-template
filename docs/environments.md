@@ -7,7 +7,7 @@ What each environment uses. Fill in the project's real names in a copy of the se
 | | Production | Preview | Development | CI |
 | --- | --- | --- | --- | --- |
 | Database | Its own | **Its own branch per preview** | Local Postgres (`docker compose up -d`) | Throwaway service container named `*_test` |
-| Migrations | Run before the build | Run only with `PREVIEW_DATABASE_ISOLATED=true` | `push` syncs the schema; create a migration before committing | Run before the integration tests |
+| Migrations | Run before the build | Run only with `PREVIEW_DATABASE_ISOLATED=true` | Never run; the CMS syncs the schema on start. Create a migration before committing | Run before the integration tests |
 | Media storage | Its own Blob store | Its own Blob store, or local disk | Local disk (`/media`) | Local disk |
 | E-mail | Resend | Server log, or Resend with a test domain | Server log | Server log |
 | Indexed by search engines | Yes | No | No | No |

@@ -9,23 +9,29 @@ Keep the `[locale]` route segment; it costs nothing and keeps a second language 
 1. `i18n/config.ts`: reduce `LOCALES` and `LOCALE_LABELS` to one language and set `DEFAULT_LOCALE`.
 2. Delete the other `messages/<locale>.json` and its import in `i18n/messages.ts`.
 3. Remove `LocaleSwitcher` from `components/layout/site-header.tsx` and delete `components/layout/locale-switcher.tsx` and the `LocaleSwitcher` messages.
-4. `scripts/seed/content.ts`: typecheck now points at every text that needs only one language. Remove the others.
-5. `pnpm payload migrate:create single-language` and `pnpm generate:types`.
-6. Remove the tests that switch languages: in `e2e/smoke.spec.ts`, and the English halves of `e2e/pages.spec.ts`, `e2e/redirects.spec.ts`, and `e2e/site-settings.spec.ts`.
+4. `pnpm generate:types`. Until it runs, typecheck fails in `lib/cms/locale.ts`, which checks that the site and the CMS have the same languages.
+5. `scripts/seed/content.ts`: typecheck now points at every text that needs only one language. Remove the others.
+6. `pnpm payload migrate:create single-language`. The migration narrows the language list in the database. It fails on a database that still holds content in the removed language; on a new project there is none.
+7. Remove the tests of the second language. Typecheck finds the unit and integration ones; the end-to-end ones fail when run.
+   - Unit: the cases with a prefixed address in `lib/seo/seo.test.ts` and `lib/cms/preview.test.ts`, and the removed language in `i18n/config.test.ts`. Where a test only needs some language, pass the remaining one.
+   - Integration: "keeps alt text per language" in `tests/int/media.int.test.ts` and "stores block content per language" in `tests/int/pages.int.test.ts`. `tests/int/contact.int.test.ts` passes the remaining language.
+   - End-to-end: the language switcher and browser-language tests in `e2e/smoke.spec.ts`, and the parts that visit `/en` in `e2e/pages.spec.ts`, `e2e/redirects.spec.ts`, `e2e/seo.spec.ts`, and `e2e/site-settings.spec.ts`.
 
 Fields stay `localized: true`. That keeps the schema ready for a second language and changes nothing for one.
 
 ## The contact form and e-mail
 
 1. Delete `features/contact/`.
-2. Delete `payload/blocks/contact-form.ts` and `components/sections/contact-form.tsx`; remove the block from `payload/blocks/page-blocks.ts` and the `contactForm` renderer, case, and slot from `components/sections/render-blocks.tsx`. Typecheck lists the routes that pass the slot.
-3. Delete `payload/collections/contact-messages.ts` and remove it from `payload.config.ts`.
-4. Remove `CONTACT_EMAIL_TO` from `lib/env-schema.ts`, `.env.example`, and `docs/environments.md`. Keep the Resend variables: invitations and password resets use them.
-5. Remove the contact page from `scripts/seed/content.ts`, the `Contact` messages, `tests/int/contact.int.test.ts`, and `e2e/contact.spec.ts`.
-6. `pnpm payload migrate:create remove-contact` and `pnpm generate:types`. The migration drops the messages table; export anything worth keeping first.
-7. `docs/architecture.md` names the contact form as the reference for a form. Point it at another form, or keep the section as a description of the pattern.
+2. Delete `payload/blocks/contact-form.ts` and `components/sections/contact-form.tsx`; remove the block from `payload/blocks/page-blocks.ts` and the `contactForm` renderer and case from `components/sections/render-blocks.tsx`.
+3. The form was the only block with a slot. Remove `BlockSlots` and the `slots` property from `components/sections/render-blocks.tsx`, `features/pages/components/cms-page.tsx`, and the two routes that pass it: `app/(frontend)/[locale]/page.tsx` and `app/(frontend)/[locale]/[...slug]/page.tsx`. Bring it back when a block needs a piece of a feature; [architecture](architecture.md) describes the pattern.
+4. Delete `payload/collections/contact-messages.ts` and remove it from `payload.config.ts`.
+5. Remove `CONTACT_EMAIL_TO` from `lib/env-schema.ts`, `.env.example`, and `docs/environments.md`. Keep the Resend variables: invitations and password resets use them.
+6. `scripts/seed/content.ts`: remove the contact page and its navigation label, and point the home page's call to action somewhere else. Remove the `Contact` messages, `tests/int/contact.int.test.ts`, and `e2e/contact.spec.ts`.
+7. `pnpm generate:types` and `pnpm payload migrate:create remove-contact`. The migration drops the messages table; export anything worth keeping first.
+8. **Fix the generated migration before running it.** It drops the `contact_messages` table with `CASCADE` and then drops a constraint that went with the table, so it fails with `constraint "payload_locked_documents_rels_contact_messages_fk" … does not exist`. Change that line to `DROP CONSTRAINT IF EXISTS`. `pnpm test:int` applies the migration to the test database and shows whether it runs.
+9. `docs/architecture.md` and `AGENTS.md` name the contact form as the reference for a form. Point them at another form, or keep the section as a description of the pattern.
 
-To drop React Hook Form too, remove `react-hook-form` and `@hookform/resolvers` and the `react-hook-form` skill, once no form uses them.
+`lib/stale-deployment.ts` stays: any Server Action call can use it. To drop the form libraries too, remove `react-hook-form`, `@hookform/resolvers`, and the `react-hook-form` skill once no form uses them, and `@react-email/components` once no e-mail template uses it.
 
 ## TanStack Query
 
@@ -34,8 +40,8 @@ Nothing in the template uses it yet; it is wired in for client-owned server stat
 1. `app/providers.tsx`: remove `QueryClientProvider` and the client setup; keep the `Toaster`.
 2. `pnpm remove @tanstack/react-query @tanstack/eslint-plugin-query`.
 3. `eslint.config.mjs`: remove the `pluginQuery` import and its config entry.
-4. `AGENTS.md`: remove the "Manage server state with TanStack Query" section and the mention in the error-handling section.
-5. Delete `.agents/skills/react-query-server-action-errors` and its link in `.claude/skills/`, or keep it for its Server Action guidance.
+4. `AGENTS.md`: remove the "Manage server state with TanStack Query" section and the mention in the error-handling section. `docs/architecture.md`: remove the mentions of the Query client and the Query adapter.
+5. Delete `.agents/skills/react-query-server-action-errors`, its link in `.claude/skills/`, and its entry in `skills-lock.json`, or keep it for its Server Action guidance.
 
 ## Other optional pieces
 

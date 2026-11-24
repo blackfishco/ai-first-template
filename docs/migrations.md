@@ -4,7 +4,7 @@ The CMS schema is code. Every change to a collection, global, block, field, loca
 
 ## Workflow
 
-1. Change the config. In development the schema syncs to your local database directly, so you can iterate.
+1. Change the config. In development the schema syncs to your local database directly on the next start, so you can iterate. You never run `migrate` on that database.
 2. When the change is ready, create the migration and regenerate the types:
 
    ```sh
@@ -33,7 +33,8 @@ The CMS schema is code. Every change to a collection, global, block, field, loca
 
 | Environment | When |
 | --- | --- |
-| Development | Not needed day to day (`push`). Run `pnpm payload migrate` on a fresh database. |
+| Development | Never. The CMS syncs the schema itself on start, also on an empty database. |
+| Test database (`*_test`) | Before the integration tests: `pnpm test:int` runs them. The test database is only ever migrated, never synced. |
 | CI | Before the integration tests, on an empty database. |
 | Production on Vercel | In the build, before `next build`. |
 | Preview on Vercel | In the build, only with `PREVIEW_DATABASE_ISOLATED=true`; see [environments](environments.md). |
@@ -42,5 +43,7 @@ The CMS schema is code. Every change to a collection, global, block, field, loca
 ## When something goes wrong
 
 - **A migration failed half-way.** Each migration runs in a transaction, so the schema is as it was. Fix the migration (if it has not been merged) or add a corrected one, and deploy again.
-- **A development database and the migrations disagree.** After a lot of `push`, `migrate` can fail on a table that already exists. Recreate the local database and run `pnpm payload migrate`.
+- **`migrate` asks whether to proceed because "data loss will occur".** You ran it on a development database, which the CMS syncs by itself. Answer no. A development database does not need migrations; if you want one built from migrations only, recreate it and run `NODE_ENV=production pnpm payload migrate` before starting anything in development mode.
+- **A migration fails on a test database with a table that already exists.** Something ran in development mode against it. Recreate the test database.
+- **A migration that removes a collection fails with `constraint … does not exist`.** The generated migration drops the table with `CASCADE` and then drops a constraint that went with it. Change that line to `DROP CONSTRAINT IF EXISTS`. This is the one edit a generated migration needs before its first run; `pnpm test:int` shows whether it applies.
 - **The types are stale.** Run `pnpm generate:types` and commit the result.

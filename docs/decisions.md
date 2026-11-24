@@ -2,6 +2,14 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-24 — `pnpm test:int` checks the database name before it migrates (BF-987)
+
+**What.** `pnpm test:int` first runs `scripts/check-test-database.ts`, which stops unless `DATABASE_URL` names a database ending in `_test`. The same check stays in the Vitest setup.
+
+**Why.** The command migrates and then runs the tests. The name check used to sit only in the test setup, after the migration. A plain `pnpm test:int` therefore ran the migrations against the development database from `.env`, and Payload asked whether to proceed with data loss. A trial run of the template found this.
+
+**Where.** `lib/testing/test-database.ts`, `scripts/check-test-database.ts`, `tests/int/setup.ts`, `package.json`.
+
 ## 2026-11-24 — No error tracker is installed; errors go through one seam (BF-984)
 
 **What.** Unhandled errors go to `captureError()`, which logs them without personal data. No Sentry SDK is installed. A project plugs a tracker in with `setErrorReporter`.

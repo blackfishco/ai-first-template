@@ -13,7 +13,7 @@ pnpm build
 pnpm test:e2e
 ```
 
-`pnpm check` runs TypeScript and lint, stopping on failure. `pnpm test` runs the Vitest unit tests; they need no database, browser, or `.env` file. `pnpm test:int` applies the committed migrations and runs the integration tests in `tests/int/` against Postgres; point `DATABASE_URL` at a database named `*_test`, because the tests delete data. `pnpm test:e2e` runs the Playwright tests in `e2e/` against the production build, so run `pnpm build` first. Install the browser once with `pnpm exec playwright install chromium`, or point `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` at an existing Chromium binary.
+`pnpm check` runs TypeScript and lint, stopping on failure. `pnpm test` runs the Vitest unit tests; they need no database, browser, or `.env` file. `pnpm test:int` applies the committed migrations and runs the integration tests in `tests/int/` against Postgres; point `DATABASE_URL` at a database named `*_test`, because the tests delete data. The command refuses any other database before it migrates, so a plain `pnpm test:int` cannot touch the development database from `.env`. Create it once and use it for nothing else; the other variables come from `.env`. `pnpm test:e2e` runs the Playwright tests in `e2e/` against the production build, so run `pnpm build` first. Install the browser once with `pnpm exec playwright install chromium`, or point `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` at an existing Chromium binary.
 
 For UI, routing, form, focus, or shared styling changes, run `pnpm start` after a fresh build and manually check the affected routes:
 
@@ -52,7 +52,7 @@ pnpm test
 pnpm build
 ```
 
-Use the [README prerequisites](../README.md#start). Confirm the lockfile is unchanged. Run `pnpm payload migrate` and `pnpm dev`, open `/` and `/admin`, and stop the server afterwards. No existing `.next/`, `node_modules/`, `.env` secrets, or undocumented files should be needed. Builds may require network access for configured `next/font` fonts; do not confuse blocked font downloads with a verified offline build.
+Use the [README prerequisites](../README.md#start). Confirm the lockfile is unchanged. Run `pnpm dev` (it creates the schema on an empty database), open `/` and `/admin`, and stop the server afterwards. No existing `.next/`, `node_modules/`, `.env` secrets, or undocumented files should be needed. Builds may require network access for configured `next/font` fonts; do not confuse blocked font downloads with a verified offline build.
 
 Before there is a publishable commit, a coordinator may snapshot tracked **and intended untracked source** into a temporary directory, initialize a standalone temporary repository, and clone that snapshot. Do not create a worktree or commit the user's working checkout for this purpose. Exclude `.git`, dependencies, build/cache output, secrets, and local skill evaluation workspaces. A snapshot check is not proof of a later published commit; repeat against the final distribution.
 
