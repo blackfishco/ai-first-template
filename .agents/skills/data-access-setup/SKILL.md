@@ -1,7 +1,7 @@
 ---
 name: data-access-setup
 description: Plan safe, typed data access for this Next.js template. Use whenever the user adds or expands Payload CMS, an external REST/OpenAPI or Swagger API, a GraphQL API, generated API clients, API authentication, server/client data fetching, TanStack Query integration, caching, or API environment variables—even when they ask only for a client, CMS, endpoint, schema, or codegen setup. Produces repository-specific implementation guidance without changing files. Do not use for unrelated one-off fetch bugs, incidents, or data migrations.
-compatibility: Next.js App Router, TypeScript, Node 24 LTS, pnpm 11.21.0, repository read tools, and a structured question tool. Official documentation access is recommended.
+compatibility: Next.js App Router, TypeScript, Node 24 LTS, pnpm 12.23.0, repository read tools, and a structured question tool. Official documentation access is recommended.
 ---
 
 # Data Access Setup

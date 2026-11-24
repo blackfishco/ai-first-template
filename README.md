@@ -4,11 +4,11 @@ Next.js App Router template for AI-assisted development, with strict TypeScript,
 
 ## Start
 
-Prerequisites: **Node 24 LTS** (see [`.node-version`](.node-version)) and **pnpm 11.21.0** (see [`package.json`](package.json)). Select Node with your runtime manager; install pnpm following its [official installation guide](https://pnpm.io/installation), selecting this exact version. Do not change the machine's global runtime merely to run this project.
+Prerequisites: **Node 24 LTS** (see [`.node-version`](.node-version)) and **pnpm 12.23.0** (see [`package.json`](package.json)). Select Node with your runtime manager; install pnpm following its [official installation guide](https://pnpm.io/installation), selecting this exact version. Do not change the machine's global runtime merely to run this project.
 
 ```sh
 node --version       # v24.x
-pnpm --version       # 11.21.0
+pnpm --version       # 12.23.0
 pnpm install --frozen-lockfile
 pnpm dev
 ```
@@ -61,7 +61,7 @@ Keep layout changes local, recurring UI styling in shared component variants, an
 
 **Branch protection is pending until the repository is connected to GitHub and configured.** Follow [the activation checklist](docs/verification.md#github-activation-pending). Do not claim merges are blocked before verifying that setting on the host.
 
-For a Node deployment, use Node 24 and pnpm 11.21.0, install with `pnpm install --frozen-lockfile`, build with `pnpm build`, and run `pnpm start`. A platform adapter must support this installed Next.js version and Server Actions; this is not a static-export app. No production storage is configured. Plan authentication, authorization, persistence, and environment validation before turning the demo into a real product.
+For a Node deployment, use Node 24 and pnpm 12.23.0, install with `pnpm install --frozen-lockfile`, build with `pnpm build`, and run `pnpm start`. A platform adapter must support this installed Next.js version and Server Actions; this is not a static-export app. No production storage is configured. Plan authentication, authorization, persistence, and environment validation before turning the demo into a real product.
 
 ## Remove the demo / prepare a release
 

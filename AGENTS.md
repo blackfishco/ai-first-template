@@ -66,7 +66,7 @@ This project uses `@tanstack/react-query` for client-owned server state. Before 
 
 # Local architecture and tooling
 
-- Use Node 24 LTS and pnpm 11.21.0, as declared in `.node-version` and `package.json`. Use only `pnpm-lock.yaml`; install with `pnpm install --frozen-lockfile`.
+- Use Node 24 LTS and pnpm 12.23.0, as declared in `.node-version` and `package.json`. Use only `pnpm-lock.yaml`; install with `pnpm install --frozen-lockfile`.
 - Follow [docs/architecture.md](docs/architecture.md): `app` composes features; features use shared code, not other features; shared modules do not import features or `app`.
 - Treat the removable task example as a server-validation/local-state demonstration, not production persistence. Do not add a mutable global server store or unnecessary Query caching.
 - Keep secrets and privileged access in `server-only` modules. Return minimal safe DTOs and recheck authorization inside each real mutation boundary.

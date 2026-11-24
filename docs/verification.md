@@ -2,7 +2,7 @@
 
 ## Local checks
 
-Use Node 24 and pnpm 11.21.0. Run:
+Use Node 24 and pnpm 12.23.0. Run:
 
 ```sh
 pnpm install --frozen-lockfile
