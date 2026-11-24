@@ -26,6 +26,12 @@ export const serverEnvSchema = z.object({
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
   // Signs Payload auth tokens. Use a different value in every environment.
   PAYLOAD_SECRET: z.string().min(32),
+  // Shared secret of the CMS live preview. Without it preview is off and the
+  // preview route rejects every request.
+  PREVIEW_SECRET: z.string().min(32).optional(),
+  // Bearer token of scheduled jobs (Vercel Cron sends it automatically).
+  // Without it the jobs endpoint accepts signed-in admins only.
+  CRON_SECRET: z.string().min(16).optional(),
   // Vercel Blob read-write token. Without it uploads stay on local disk.
   BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
 });

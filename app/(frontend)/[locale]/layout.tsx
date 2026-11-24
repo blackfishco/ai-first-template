@@ -2,11 +2,13 @@ import "../../globals.css";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
 import { AppProviders } from "@/app/providers";
+import { LivePreviewRefresh } from "@/components/cms/live-preview-refresh";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { isLocale, LOCALES } from "@/i18n/config";
@@ -55,6 +57,7 @@ export default async function RootLayout({
     },
   );
   const siteName = settings.siteName ?? t("name");
+  const { isEnabled: isDraft } = await draftMode();
 
   return (
     <html
@@ -69,6 +72,7 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <AppProviders>
+            {isDraft ? <LivePreviewRefresh /> : null}
             <SiteHeader
               siteName={siteName}
               navigation={settings.headerNav}

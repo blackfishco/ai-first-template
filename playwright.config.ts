@@ -32,6 +32,8 @@ export default defineConfig({
     command: `pnpm start --port ${port}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
+    // Fixed test-only secret; e2e/preview.spec.ts uses the same value.
+    env: { PREVIEW_SECRET: "e2e-preview-secret-0000000000000000" },
     timeout: 60_000,
   },
 });
