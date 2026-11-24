@@ -19,6 +19,24 @@ jobs:
     env:
       CI: true
       NEXT_TELEMETRY_DISABLED: 1
+      # Throwaway database and secret for this job only. The integration tests
+      # delete data and require a database named *_test.
+      DATABASE_URL: postgres://template:template@127.0.0.1:5432/template_test
+      PAYLOAD_SECRET: ci-only-secret-not-used-anywhere-else-0000
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: template
+          POSTGRES_PASSWORD: template
+          POSTGRES_DB: template_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U template -d template_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,8 +50,14 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Lint and types
         run: pnpm check
+      - name: Generated CMS types are up to date
+        run: |
+          pnpm generate:types
+          git diff --exit-code -- payload-types.ts
       - name: Unit tests
         run: pnpm test
+      - name: Migrations and integration tests
+        run: pnpm test:int
       - name: Production build
         run: pnpm build
       - name: Install Playwright browser

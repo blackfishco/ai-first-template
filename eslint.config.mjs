@@ -53,9 +53,15 @@ const eslintConfig = defineConfig([
           basePath: root,
           zones: [
             {
-              target: ["./components", "./lib", "./hooks", "./i18n"],
+              target: ["./components", "./lib", "./hooks", "./i18n", "./payload"],
               from: ["./app", "./features"],
               message: "Shared code must not depend on app or feature modules.",
+            },
+            {
+              target: "./payload",
+              from: "./components",
+              message:
+                "CMS configuration must not import site components; it is loaded by the Payload CLI outside React.",
             },
             {
               target: "./features",
