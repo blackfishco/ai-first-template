@@ -16,7 +16,7 @@ app ───────────→ shared modules
 
 ## Reference data flow
 
-Start at [`app/[locale]/example/page.tsx`](../app/[locale]/example/page.tsx), then follow its imports into [`features/example/`](../features/example/).
+Start at [`app/(frontend)/[locale]/example/page.tsx`](../app/(frontend)/[locale]/example/page.tsx), then follow its imports into [`features/example/`](../features/example/).
 
 1. A Server Component reads deterministic initial tasks from a `server-only` demo module.
 2. The client receives only safe task fields (`id`, `text`) and owns its local additions.
@@ -45,6 +45,8 @@ Payload runs inside the same Next.js app. The site lives in the `app/(frontend)`
 - **Schema changes.** Change the collection, then run `pnpm payload migrate:create <name>`, `pnpm generate:types`, and `pnpm generate:importmap` if admin components changed. Commit the migration and [`payload-types.ts`](../payload-types.ts) with the change. Development syncs the schema directly; every other environment runs `pnpm payload migrate` and never `push`.
 - **Naming.** Postgres truncates identifiers at 63 characters. Give deeply nested fields, blocks, and selects a short `dbName` or `enumName` before the first migration that contains them.
 - **Reading content.** Server code uses the Local API (`getPayload({ config })`) from `server-only` modules and returns minimal DTOs. The Local API skips access control by default: for anything done on behalf of a user, pass `user` and `overrideAccess: false`.
+- **Accounts and roles.** The `users` collection holds CMS accounts only, with roles `admin` and `editor` ([`payload/access/roles.ts`](../payload/access/roles.ts)). The first account created becomes an admin. Admins invite others: creating an account sends a link to set a password, so passwords are never shared. Without an e-mail adapter the message is written to the server log. Use `isEditor` for content writes, `isAdmin` for accounts and settings, and `publishedOrEditor` for reads on collections with drafts.
+- **End users.** Site visitors are not CMS users. If a project needs visitor accounts, add a separate auth collection (for example `customers`) with its own access rules and a feature in `features/` that owns the sign-in flow. Do not add visitor roles to `users`: everyone in that collection can open the admin.
 - **Locale routing.** [`proxy.ts`](../proxy.ts) excludes `/admin` and `/api` from locale handling. Add any other non-localized route to its matcher.
 
 ## Environment

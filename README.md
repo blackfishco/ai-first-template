@@ -28,6 +28,7 @@ The app needs a Postgres database and the variables in [`.env.example`](.env.exa
 | `pnpm dev` | Development server on port 3000 |
 | `pnpm check` | Lint and TypeScript; stops on failure |
 | `pnpm test` | Vitest unit tests |
+| `pnpm test:int` | Migrations and integration tests against a `*_test` Postgres database |
 | `pnpm build` | Production build |
 | `pnpm test:e2e` | Playwright tests against the production build |
 | `pnpm start` | Serve an existing production build |
@@ -51,12 +52,12 @@ Unit tests sit next to the code as `*.test.ts`; end-to-end tests are in `e2e/`. 
 
 | Area | Files |
 | --- | --- |
-| Starter page | [`app/[locale]/page.tsx`](app/[locale]/page.tsx) |
-| Layout and metadata | [`app/[locale]/layout.tsx`](app/[locale]/layout.tsx) |
+| Starter page | [`app/(frontend)/[locale]/page.tsx`](app/(frontend)/[locale]/page.tsx) |
+| Layout and metadata | [`app/(frontend)/[locale]/layout.tsx`](app/(frontend)/[locale]/layout.tsx) |
 | Design tokens and base CSS | [`app/globals.css`](app/globals.css) |
 | Shared UI primitives | [`components/ui/`](components/ui/) |
 | Reference feature | [`features/example/`](features/example/) |
-| Demo route | [`app/[locale]/example/`](app/[locale]/example/) |
+| Demo route | [`app/(frontend)/[locale]/example/`](app/(frontend)/[locale]/example/) |
 | Small gallery and interactions | [`components/examples/example-gallery.tsx`](components/examples/example-gallery.tsx), [`components/examples/gallery-interactions.tsx`](components/examples/gallery-interactions.tsx) |
 | Czech UI text | [`messages/cs.json`](messages/cs.json), [`messages/example.cs.json`](messages/example.cs.json) |
 | Locale setup/message composition | [`i18n/routing.ts`](i18n/routing.ts), [`i18n/request.ts`](i18n/request.ts) |

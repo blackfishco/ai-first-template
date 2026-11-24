@@ -21,6 +21,7 @@
     "check": "pnpm run typecheck && pnpm run lint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:int": "payload migrate && vitest run --config vitest.int.config.ts",
     "test:e2e": "playwright test",
     "prepare": "husky"
   },

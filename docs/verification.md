@@ -8,11 +8,12 @@ Use Node 24 and pnpm 12.23.0. Run:
 pnpm install --frozen-lockfile
 pnpm check
 pnpm test
+DATABASE_URL=postgres://template:template@127.0.0.1:5432/template_test pnpm test:int
 pnpm build
 pnpm test:e2e
 ```
 
-`pnpm check` runs TypeScript and lint, stopping on failure. `pnpm test` runs the Vitest unit tests; they need no database, browser, or `.env` file. `pnpm test:e2e` runs the Playwright tests in `e2e/` against the production build, so run `pnpm build` first. Install the browser once with `pnpm exec playwright install chromium`, or point `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` at an existing Chromium binary.
+`pnpm check` runs TypeScript and lint, stopping on failure. `pnpm test` runs the Vitest unit tests; they need no database, browser, or `.env` file. `pnpm test:int` applies the committed migrations and runs the integration tests in `tests/int/` against Postgres; point `DATABASE_URL` at a database named `*_test`, because the tests delete data. `pnpm test:e2e` runs the Playwright tests in `e2e/` against the production build, so run `pnpm build` first. Install the browser once with `pnpm exec playwright install chromium`, or point `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` at an existing Chromium binary.
 
 For UI, routing, form, focus, or shared styling changes, run `pnpm start` after a fresh build and manually check the affected routes:
 
@@ -29,7 +30,7 @@ The workflow is delivered; host-side protection is a separate setup task. It is 
 After connecting/pushing the repository to GitHub:
 
 1. Enable Actions and confirm the configured runner is available to the repository.
-2. Run the `CI` workflow on a pull request; confirm the `Quality checks` job runs frozen installation, lint, type checks, unit tests, build, and end-to-end tests successfully.
+2. Run the `CI` workflow on a pull request; confirm the `Quality checks` job runs frozen installation, lint, type checks, generated-type check, unit tests, migrations and integration tests, build, and end-to-end tests successfully.
 3. Under repository Settings → Rules → Rulesets (or branch protection), target the actual default branch. Require pull requests and the successful **Quality checks** status reported by that workflow. Select its exact reported context after the first run rather than guessing a status name.
 4. Restrict bypass permissions as appropriate, require the branch to be up to date if desired, and save the rule. Verify the rule is enabled, not only in evaluation mode.
 5. On a disposable PR, deliberately introduce a type error, then a build failure, and verify merge is blocked. Revert those probes; do not weaken checks.

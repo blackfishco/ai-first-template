@@ -4,7 +4,7 @@ This removes teaching content, not the shared design system. Try the procedure i
 
 ## 1. Remove only demo-owned paths
 
-- `app/[locale]/example/` (page and loading route)
+- `app/(frontend)/[locale]/example/` (page and loading route)
 - `features/example/`
 - `components/examples/example-gallery.tsx`
 - `components/examples/gallery-interactions.tsx`
@@ -20,7 +20,7 @@ In `i18n/request.ts`:
 - Replace `messages: { ...csMessages, ...exampleMessages }` with `messages: csMessages`.
 - Keep locale validation and the remaining configuration unchanged.
 
-In `app/[locale]/page.tsx`:
+In `app/(frontend)/[locale]/page.tsx`:
 
 - Remove the demo `<Card>…</Card>` block, including its `/example` link.
 - Remove unused `ArrowRightIcon`, `buttonVariants`, all `Card*`, and `Link` imports.
