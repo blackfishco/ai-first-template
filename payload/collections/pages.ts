@@ -7,6 +7,7 @@ import { isEditor } from "../access/roles";
 import { PAGE_BLOCKS } from "../blocks/page-blocks";
 import { slugField } from "../fields/slug";
 import { revalidateCollection } from "../hooks/revalidate";
+import { redirectAfterSlugChange } from "../hooks/slug-redirect";
 
 const revalidate = revalidateCollection(tagsForPageChange);
 
@@ -39,7 +40,7 @@ export const Pages: CollectionConfig = {
     delete: isEditor,
   },
   hooks: {
-    afterChange: [revalidate.afterChange],
+    afterChange: [redirectAfterSlugChange, revalidate.afterChange],
     afterDelete: [revalidate.afterDelete],
   },
   fields: [

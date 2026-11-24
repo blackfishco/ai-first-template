@@ -1,55 +1,54 @@
-import { ArrowRightIcon } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
-import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { ContactForm } from "@/features/contact/components/contact-form";
 import { CmsPage } from "@/features/pages/components/cms-page";
-import { Link } from "@/i18n/navigation";
+import { getPageMetadata } from "@/features/pages/server/get-page-metadata";
 import { HOME_SLUG } from "@/lib/slug";
 
-/** The CMS page with the slug `home`, or the starter page until it exists. */
-export default function Home() {
-  return <CmsPage slug={HOME_SLUG} fallback={<Starter />} />;
+export function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata(HOME_SLUG);
 }
 
-async function Starter() {
+/** The CMS page with the slug `home`, or a pointer to the CMS until it exists. */
+export default function Home() {
+  return (
+    <CmsPage
+      slug={HOME_SLUG}
+      slots={{ contactForm: <ContactForm /> }}
+      fallback={<NoHomePage />}
+    />
+  );
+}
+
+async function NoHomePage() {
   const t = await getTranslations("HomePage");
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-6 py-12 sm:py-20">
-      <header className="flex max-w-2xl flex-col items-start gap-5">
-        <Badge variant="secondary">{t("badge")}</Badge>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-          {t("title")}
-        </h1>
-        <p className="text-lg leading-relaxed text-muted-foreground">
-          {t("description")}
-        </p>
-      </header>
-      <Card>
-        <CardHeader>
-          <CardTitle><h2>{t("exampleTitle")}</h2></CardTitle>
-          <CardDescription>{t("exampleDescription")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>{t("exampleContent")}</p>
-        </CardContent>
-        <CardFooter>
-          <Link href="/example" className={buttonVariants()}>
-            {t("openExample")}
-            <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
+    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center px-6 py-12">
+      <Empty>
+        <EmptyHeader>
+          <EmptyTitle>
+            <h1>{t("emptyTitle")}</h1>
+          </EmptyTitle>
+          <EmptyDescription>{t("emptyDescription")}</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          {/* The admin is outside locale routing, so this is not the localized Link. */}
+          <Link href="/admin" className={buttonVariants()}>
+            {t("openAdmin")}
           </Link>
-        </CardFooter>
-      </Card>
-      <p className="text-sm text-muted-foreground">{t("footer")}</p>
+        </EmptyContent>
+      </Empty>
     </main>
   );
 }

@@ -1,13 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-test("home page renders and links to the example", async ({ page }) => {
+test("home page renders", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-
-  await page.getByRole("link", { name: "Otevřít ukázku" }).click();
-  await expect(page).toHaveURL(/\/example$/);
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.getByRole("banner")).toBeVisible();
 });
 
 test("language switcher keeps the page and changes the language", async ({
@@ -20,9 +17,10 @@ test("language switcher keeps the page and changes the language", async ({
 
   await expect(page).toHaveURL(/\/en$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(
-    page.getByRole("link", { name: "Open the example" }),
-  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "English" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
 });
 
 test("CMS admin loads outside locale routing", async ({ page }) => {

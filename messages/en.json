@@ -1,42 +1,8 @@
 {
   "HomePage": {
-    "badge": "Development template",
-    "title": "From an idea to your own app",
-    "description": "Start with the look. Shared components and a verified example keep the app easy to follow as it grows.",
-    "exampleTitle": "Try a small example",
-    "exampleDescription": "A task list, a form, and a state gallery in one place.",
-    "exampleContent": "The demo shows validation, safe error messages, and working with temporary data. Remove all of it once you start building your own features.",
-    "openExample": "Open the example",
-    "footer": "The look comes from shared components and the existing design tokens."
-  },
-  "Gallery": {
-    "title": "State gallery",
-    "description": "A small showcase of the components in use. The states are shown side by side on purpose; nothing is being saved.",
-    "buttonsTitle": "Actions and feedback",
-    "buttonsDescription": "A regular action, loading, and an unavailable action.",
-    "notify": "Show a notification",
-    "loading": "Loading…",
-    "disabled": "Unavailable action",
-    "toastTitle": "Notifications work",
-    "toastDescription": "This message uses the shared Base UI toast.",
-    "feedbackTitle": "Results and the empty state",
-    "feedbackDescription": "A message should explain the result and the next step.",
-    "successTitle": "Done",
-    "successDescription": "The change was completed.",
-    "errorTitle": "The change could not be completed",
-    "errorDescription": "Try the action again. What you typed is kept.",
-    "emptyTitle": "No items yet",
-    "emptyDescription": "New items appear after you submit the form.",
-    "calendarTitle": "Calendar and keyboard",
-    "calendarDescription": "Pick a day with the mouse or the arrow keys. The demo always starts in January 2026.",
-    "calendarLabel": "Demo calendar",
-    "previousMonth": "Previous month",
-    "nextMonth": "Next month",
-    "selectedDate": "Selected: {date}",
-    "dialogTitle": "Demo dialog",
-    "dialogDescription": "The Tab key keeps focus inside the dialog. Closing it returns focus to the button that opened it.",
-    "openDialog": "Open the dialog",
-    "closeDialog": "Close the dialog"
+    "emptyTitle": "The site has no home page yet",
+    "emptyDescription": "Create a page with the address \"home\" in the admin and publish it. It will show here.",
+    "openAdmin": "Open the admin"
   },
   "Notifications": {
     "close": "Close notification",
@@ -51,5 +17,22 @@
     "name": "Development template",
     "mainNavigation": "Main navigation",
     "footerNavigation": "Footer links"
+  },
+  "Contact": {
+    "name": "Name",
+    "email": "E-mail",
+    "message": "Message",
+    "messageHint": "Write {min} to {max} characters.",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "sent": "Thank you, your message was sent. We will get back to you.",
+    "errorTitle": "The message could not be sent",
+    "errors": {
+      "REQUIRED": "Fill in this field.",
+      "TOO_SHORT": "The message is too short.",
+      "TOO_LONG": "The text is too long.",
+      "INVALID_EMAIL": "Enter a valid e-mail address.",
+      "UNAVAILABLE": "The server could not be reached. Please try again; what you wrote is still in the form."
+    }
   }
 }

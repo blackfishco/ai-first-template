@@ -26,12 +26,28 @@ export const serverEnvSchema = z.object({
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
   // Signs Payload auth tokens. Use a different value in every environment.
   PAYLOAD_SECRET: z.string().min(32),
+  // Search engines index only the Vercel production deployment. On other
+  // hosts, set this to `true` on the production instance.
+  ALLOW_INDEXING: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((value) => value === "true"),
   // Shared secret of the CMS live preview. Without it preview is off and the
   // preview route rejects every request.
   PREVIEW_SECRET: z.string().min(32).optional(),
   // Bearer token of scheduled jobs (Vercel Cron sends it automatically).
   // Without it the jobs endpoint accepts signed-in admins only.
   CRON_SECRET: z.string().min(16).optional(),
+  // Read by scripts/seed.ts, which runs only when this is exactly `true`.
+  ALLOW_SEED: z.string().optional(),
+  // E-mail through Resend. Both are needed; without them e-mails are written
+  // to the server log and nothing fails.
+  RESEND_API_KEY: z.string().min(1).optional(),
+  // Sender address on a domain verified in Resend.
+  EMAIL_FROM: z.email().optional(),
+  EMAIL_FROM_NAME: z.string().min(1).optional(),
+  // Where contact form messages are sent. Without it they are only stored.
+  CONTACT_EMAIL_TO: z.email().optional(),
   // Vercel Blob read-write token. Without it uploads stay on local disk.
   BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
 });

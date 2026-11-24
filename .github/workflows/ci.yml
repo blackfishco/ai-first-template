@@ -58,6 +58,11 @@ jobs:
         run: pnpm test
       - name: Migrations and integration tests
         run: pnpm test:int
+      - name: Seed twice
+        # The second run proves the seed updates its content instead of duplicating it.
+        run: |
+          ALLOW_SEED=true pnpm seed
+          ALLOW_SEED=true pnpm seed
       - name: Production build
         run: pnpm build
       - name: Install Playwright browser

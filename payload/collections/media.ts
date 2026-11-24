@@ -97,6 +97,15 @@ export const Media: CollectionConfig = {
           : true,
     },
     {
+      // Marks media the seed owns, so a second run reuses it. Never set by hand.
+      name: "seedKey",
+      type: "text",
+      unique: true,
+      index: true,
+      admin: { hidden: true },
+      access: { create: () => false, update: () => false },
+    },
+    {
       name: "blurDataUrl",
       type: "text",
       admin: { hidden: true },

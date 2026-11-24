@@ -1,42 +1,8 @@
 {
   "HomePage": {
-    "badge": "Vývojová šablona",
-    "title": "Od nápadu k vlastní aplikaci",
-    "description": "Začněte vzhledem. Sdílené komponenty a ověřený příklad vám pomohou udržet aplikaci přehlednou i při dalších změnách.",
-    "exampleTitle": "Vyzkoušejte malý příklad",
-    "exampleDescription": "Seznam úkolů, formulář a galerie stavů na jednom místě.",
-    "exampleContent": "Ukázka předvádí validaci, bezpečné chybové zprávy a práci s dočasnými daty. Můžete ji celou odstranit, až začnete stavět vlastní funkce.",
-    "openExample": "Otevřít ukázku",
-    "footer": "Vzhled vychází ze sdílených komponent a stávajících designových tokenů."
-  },
-  "Gallery": {
-    "title": "Galerie stavů",
-    "description": "Malá ukázka použitých komponent. Tyto stavy jsou záměrně zobrazené vedle sebe, nejde o probíhající ukládání.",
-    "buttonsTitle": "Akce a odezva",
-    "buttonsDescription": "Běžná akce, načítání a nedostupná akce.",
-    "notify": "Zobrazit oznámení",
-    "loading": "Načítání…",
-    "disabled": "Nedostupná akce",
-    "toastTitle": "Oznámení funguje",
-    "toastDescription": "Tato zpráva používá sdílený Base UI toast.",
-    "feedbackTitle": "Výsledky a prázdný stav",
-    "feedbackDescription": "Zpráva má vysvětlit výsledek i další krok.",
-    "successTitle": "Hotovo",
-    "successDescription": "Změna byla úspěšně dokončena.",
-    "errorTitle": "Změnu se nepodařilo dokončit",
-    "errorDescription": "Zkuste akci zopakovat. Vaše rozepsané údaje zůstávají zachované.",
-    "emptyTitle": "Zatím žádné položky",
-    "emptyDescription": "Nové položky se zobrazí po odeslání formuláře.",
-    "calendarTitle": "Kalendář a klávesnice",
-    "calendarDescription": "Vyberte den myší nebo šipkami. Ukázka začíná vždy v lednu 2026.",
-    "calendarLabel": "Ukázkový kalendář",
-    "previousMonth": "Předchozí měsíc",
-    "nextMonth": "Následující měsíc",
-    "selectedDate": "Vybráno: {date}",
-    "dialogTitle": "Ukázkový dialog",
-    "dialogDescription": "Klávesa Tab drží focus uvnitř dialogu. Po zavření se focus vrátí na tlačítko, které jej otevřelo.",
-    "openDialog": "Otevřít dialog",
-    "closeDialog": "Zavřít dialog"
+    "emptyTitle": "Web zatím nemá úvodní stránku",
+    "emptyDescription": "V administraci vytvořte stránku s adresou „home“ a publikujte ji. Zobrazí se tady.",
+    "openAdmin": "Otevřít administraci"
   },
   "Notifications": {
     "close": "Zavřít oznámení",
@@ -51,5 +17,22 @@
     "name": "Vývojová šablona",
     "mainNavigation": "Hlavní navigace",
     "footerNavigation": "Odkazy v patičce"
+  },
+  "Contact": {
+    "name": "Jméno",
+    "email": "E-mail",
+    "message": "Zpráva",
+    "messageHint": "Napište {min} až {max} znaků.",
+    "submit": "Odeslat zprávu",
+    "sending": "Odesílání…",
+    "sent": "Děkujeme, zpráva je odeslaná. Ozveme se vám.",
+    "errorTitle": "Zprávu se nepodařilo odeslat",
+    "errors": {
+      "REQUIRED": "Vyplňte toto pole.",
+      "TOO_SHORT": "Zpráva je příliš krátká.",
+      "TOO_LONG": "Text je příliš dlouhý.",
+      "INVALID_EMAIL": "Zadejte platnou e-mailovou adresu.",
+      "UNAVAILABLE": "Server se nepodařilo zastihnout. Zkuste to prosím znovu; to, co jste napsali, zůstalo ve formuláři."
+    }
   }
 }
