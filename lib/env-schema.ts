@@ -23,6 +23,8 @@ export const serverEnvSchema = z.object({
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
   // Signs Payload auth tokens. Use a different value in every environment.
   PAYLOAD_SECRET: z.string().min(32),
+  // Vercel Blob read-write token. Without it uploads stay on local disk.
+  BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

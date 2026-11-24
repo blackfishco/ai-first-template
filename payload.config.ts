@@ -10,7 +10,9 @@ import sharp from "sharp";
 
 import { DEFAULT_LOCALE, LOCALE_LABELS, LOCALES } from "./i18n/config";
 import { loadServerEnv } from "./lib/env-schema";
+import { Media } from "./payload/collections/media";
 import { Users } from "./payload/collections/users";
+import { mediaStorage } from "./payload/plugins/storage";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -27,7 +29,7 @@ export default buildConfig({
       baseDir: dirname,
     },
   },
-  collections: [Users],
+  collections: [Media, Users],
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: { connectionString: env.DATABASE_URL },
@@ -51,4 +53,5 @@ export default buildConfig({
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
   sharp,
+  plugins: [mediaStorage(env.BLOB_READ_WRITE_TOKEN)],
 });
