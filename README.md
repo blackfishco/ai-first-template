@@ -25,7 +25,9 @@ No account, database, external API, or secret environment variable is needed. De
 | --- | --- |
 | `pnpm dev` | Development server on port 3000 |
 | `pnpm check` | Lint and TypeScript; stops on failure |
+| `pnpm test` | Vitest unit tests |
 | `pnpm build` | Production build |
+| `pnpm test:e2e` | Playwright tests against the production build |
 | `pnpm start` | Serve an existing production build |
 
 For a full local check:
@@ -33,10 +35,12 @@ For a full local check:
 ```sh
 pnpm install --frozen-lockfile
 pnpm check
+pnpm test
 pnpm build
+pnpm test:e2e
 ```
 
-No automated test runner is configured. Check browser behavior manually against a fresh production build; see [verification](docs/verification.md).
+Unit tests sit next to the code as `*.test.ts`; end-to-end tests are in `e2e/`. Tests do not replace a visual check of a fresh production build; see [verification](docs/verification.md).
 
 ## Where to change things
 
@@ -57,7 +61,7 @@ Keep layout changes local, recurring UI styling in shared component variants, an
 
 ## CI and delivery
 
-[GitHub Actions](.github/workflows/ci.yml) checks pushes and pull requests with frozen installation, lint, type checks, and a production build. A local passing check does not prove that GitHub branch protection is active.
+[GitHub Actions](.github/workflows/ci.yml) checks pushes and pull requests with frozen installation, lint, type checks, unit tests, a production build, and end-to-end tests. A local passing check does not prove that GitHub branch protection is active.
 
 **Branch protection is pending until the repository is connected to GitHub and configured.** Follow [the activation checklist](docs/verification.md#github-activation-pending). Do not claim merges are blocked before verifying that setting on the host.
 

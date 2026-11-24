@@ -24,6 +24,11 @@
 # production
 /build
 
+# test output
+/test-results/
+/playwright-report/
+/coverage/
+
 # misc
 .DS_Store
 *.pem

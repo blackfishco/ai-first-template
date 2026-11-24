@@ -32,5 +32,11 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Lint and types
         run: pnpm check
+      - name: Unit tests
+        run: pnpm test
       - name: Production build
         run: pnpm build
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+      - name: End-to-end tests
+        run: pnpm test:e2e
