@@ -26,11 +26,17 @@ jobs:
           node-version-file: .node-version
       - uses: pnpm/action-setup@v4
         with:
-          version: 11.21.0
+          version: 12.23.0
           run_install: false
       - name: Install locked dependencies
         run: pnpm install --frozen-lockfile
       - name: Lint and types
         run: pnpm check
+      - name: Unit tests
+        run: pnpm test
       - name: Production build
         run: pnpm build
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+      - name: End-to-end tests
+        run: pnpm test:e2e

@@ -37,6 +37,10 @@ For a real backend, use the `data-access-setup` skill to plan the contract, secu
 - Define timeout, retry, freshness, invalidation, and personalized-data isolation deliberately.
 - Keep data server-owned by default. For genuinely client-owned server state, reuse the QueryClient in [`app/providers.tsx`](../app/providers.tsx); keep query keys/options/adapters in the owning feature.
 
+## Environment
+
+[`lib/env-schema.ts`](../lib/env-schema.ts) is the only definition of server environment variables. [`lib/env.ts`](../lib/env.ts) validates them once at startup and is the only place server code reads them; a missing or malformed variable stops the build or the server with an error that names the variable, never its value. Add a variable to the schema and to [`.env.example`](../.env.example) in the same change. The schema module stays free of `server-only` so CLI tools outside Next.js can reuse it.
+
 ## One error contract
 
 | Layer | Expected failure representation |

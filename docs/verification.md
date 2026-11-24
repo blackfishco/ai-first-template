@@ -2,15 +2,17 @@
 
 ## Local checks
 
-Use Node 24 and pnpm 11.21.0. Run:
+Use Node 24 and pnpm 12.23.0. Run:
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm check
+pnpm test
 pnpm build
+pnpm test:e2e
 ```
 
-`pnpm check` runs TypeScript and lint, stopping on failure. No automated test runner is configured.
+`pnpm check` runs TypeScript and lint, stopping on failure. `pnpm test` runs the Vitest unit tests; they need no database, browser, or `.env` file. `pnpm test:e2e` runs the Playwright tests in `e2e/` against the production build, so run `pnpm build` first. Install the browser once with `pnpm exec playwright install chromium`, or point `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` at an existing Chromium binary.
 
 For UI, routing, form, focus, or shared styling changes, run `pnpm start` after a fresh build and manually check the affected routes:
 
@@ -18,7 +20,7 @@ For UI, routing, form, focus, or shared styling changes, run `pnpm start` after 
 - `/cs/example`: initial tasks and demo disclaimer, invalid input, successful additions, safe failure and retry, refresh reset, and isolation between visitors.
 - Shared UI: desktop and mobile layouts, keyboard navigation, focus handling, accessible names, dialogs, calendar, and toast feedback.
 
-Stop the server after verification. Report commands, results, manual checks, and every unrun check with its reason. Lint, types, and a build do not prove browser behavior. Do not weaken checks to pass.
+Stop the server after verification. Report commands, results, manual checks, and every unrun check with its reason. Lint, types, tests, and a build do not prove visual correctness. Do not weaken checks to pass.
 
 ## GitHub activation (pending)
 
@@ -27,7 +29,7 @@ The workflow is delivered; host-side protection is a separate setup task. It is 
 After connecting/pushing the repository to GitHub:
 
 1. Enable Actions and confirm the configured runner is available to the repository.
-2. Run the `CI` workflow on a pull request; confirm the `Quality checks` job runs frozen installation, lint, type checks, and build successfully.
+2. Run the `CI` workflow on a pull request; confirm the `Quality checks` job runs frozen installation, lint, type checks, unit tests, build, and end-to-end tests successfully.
 3. Under repository Settings → Rules → Rulesets (or branch protection), target the actual default branch. Require pull requests and the successful **Quality checks** status reported by that workflow. Select its exact reported context after the first run rather than guessing a status name.
 4. Restrict bypass permissions as appropriate, require the branch to be up to date if desired, and save the rule. Verify the rule is enabled, not only in evaluation mode.
 5. On a disposable PR, deliberately introduce a type error, then a build failure, and verify merge is blocked. Revert those probes; do not weaken checks.
@@ -45,6 +47,7 @@ node --version
 pnpm --version
 pnpm install --frozen-lockfile
 pnpm check
+pnpm test
 pnpm build
 ```
 

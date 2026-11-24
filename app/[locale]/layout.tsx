@@ -7,6 +7,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 
 import { AppProviders } from "@/app/providers";
 import { routing } from "@/i18n/routing";
+import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -22,6 +23,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(env.SITE_URL),
   title: "Vývojová šablona",
   description: "Přehledný základ pro vývoj vlastní aplikace se sdílenými komponentami.",
 };
