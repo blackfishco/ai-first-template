@@ -2,6 +2,14 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-24 — No error tracker is installed; errors go through one seam (BF-984)
+
+**What.** Unhandled errors go to `captureError()`, which logs them without personal data. No Sentry SDK is installed. A project plugs a tracker in with `setErrorReporter`.
+
+**Why.** The ticket asked for Sentry as an optional module. The SDK wraps the Next.js config, adds client and server setup files, and ships browser code to every visitor whether or not a DSN is set. Not every project uses Sentry, and removing it is more work than adding it. The seam keeps the one decision that matters, a single place for errors with scrubbing, and leaves the vendor to the project.
+
+**Where.** `lib/observability.ts`, `instrumentation.ts`, `docs/architecture.md`.
+
 ## 2026-11-24 — Preview builds do not migrate until previews have their own database (BF-983)
 
 **What.** The build script migrates on production. On a preview it migrates only when `PREVIEW_DATABASE_ISOLATED=true`.

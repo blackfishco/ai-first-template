@@ -34,5 +34,13 @@
       "INVALID_EMAIL": "Enter a valid e-mail address.",
       "UNAVAILABLE": "The server could not be reached. Please try again; what you wrote is still in the form."
     }
+  },
+  "Errors": {
+    "unexpectedTitle": "Something went wrong",
+    "unexpectedDescription": "The page could not be loaded. Please try again.",
+    "retry": "Try again",
+    "notFoundTitle": "Page not found",
+    "notFoundDescription": "Nothing lives at this address. The page may have moved.",
+    "backHome": "Back to home"
   }
 }

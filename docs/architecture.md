@@ -80,6 +80,14 @@ Payload runs inside the same Next.js app. The site lives in the `app/(frontend)`
 - **Health.** `/api/health` answers 200 when the database responds and 503 when it does not.
 - **Headers.** [`securityHeaders()`](../lib/security/headers.ts) applies to every response. There is no Content Security Policy; see [decisions](decisions.md).
 
+## Errors and monitoring
+
+Expected failures are `Result` values, handled where they occur. Everything else is unexpected and ends in one place: [`captureError()`](../lib/observability.ts), which writes a structured log line with secrets and e-mail addresses removed. [`instrumentation.ts`](../instrumentation.ts) sends every unhandled server error there.
+
+- **What visitors see.** [`error.tsx`](../app/(frontend)/[locale]/error.tsx) and [`not-found.tsx`](../app/(frontend)/[locale]/not-found.tsx) are translated and show no technical detail. [`global-error.tsx`](../app/global-error.tsx) covers a failing root layout.
+- **Old tabs after a deploy.** A tab opened before a deploy calls Server Actions the new build does not know. Wrap action calls as the contact form does: [`reloadOnStaleDeployment()`](../lib/stale-deployment.ts) reloads the page for that one error.
+- **Adding an error tracker.** The template ships none. To add Sentry or another service: install its SDK, initialize it in `register()` in `instrumentation.ts`, and call `setErrorReporter((error, context) => …)` there. Add its variables to `lib/env-schema.ts`. Browser-side tracking needs the SDK's own client setup. Never send what `captureError` scrubs: pass the tracker the same scrubbed context.
+
 ## Environment
 
 [`lib/env-schema.ts`](../lib/env-schema.ts) is the only definition of server environment variables. [`lib/env.ts`](../lib/env.ts) validates them once at startup and is the only place server code reads them; a missing or malformed variable stops the build or the server with an error that names the variable, never its value. Add a variable to the schema and to [`.env.example`](../.env.example) in the same change. The schema module stays free of `server-only` so CLI tools outside Next.js can reuse it.
