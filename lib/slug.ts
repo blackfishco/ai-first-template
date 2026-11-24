@@ -21,6 +21,9 @@ export async function uniqueSlug(
   return candidate;
 }
 
+/** The page with this slug is served at the site root. */
+export const HOME_SLUG = "home";
+
 /**
  * Slugs a page cannot take because a fixed route or a system path owns them.
  * Add every new top-level route of the app here.

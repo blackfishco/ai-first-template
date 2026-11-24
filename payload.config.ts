@@ -11,6 +11,7 @@ import sharp from "sharp";
 import { DEFAULT_LOCALE, LOCALE_LABELS, LOCALES } from "./i18n/config";
 import { loadServerEnv } from "./lib/env-schema";
 import { Media } from "./payload/collections/media";
+import { Pages } from "./payload/collections/pages";
 import { Users } from "./payload/collections/users";
 import { mediaStorage } from "./payload/plugins/storage";
 
@@ -29,7 +30,7 @@ export default buildConfig({
       baseDir: dirname,
     },
   },
-  collections: [Media, Users],
+  collections: [Pages, Media, Users],
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: { connectionString: env.DATABASE_URL },

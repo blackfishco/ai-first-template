@@ -1,5 +1,5 @@
 import { ArrowRightIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { Badge } from "@/components/ui/badge";
@@ -12,10 +12,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { CmsPage } from "@/features/pages/components/cms-page";
 import { Link } from "@/i18n/navigation";
+import { HOME_SLUG } from "@/lib/slug";
 
+/** The CMS page with the slug `home`, or the starter page until it exists. */
 export default function Home() {
-  const t = useTranslations("HomePage");
+  return <CmsPage slug={HOME_SLUG} fallback={<Starter />} />;
+}
+
+async function Starter() {
+  const t = await getTranslations("HomePage");
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-6 py-12 sm:py-20">

@@ -2,6 +2,7 @@ import * as migration_20261124_110731_initial from './20261124_110731_initial';
 import * as migration_20261124_111611_users_roles from './20261124_111611_users_roles';
 import * as migration_20261124_113402_locales from './20261124_113402_locales';
 import * as migration_20261124_114041_media from './20261124_114041_media';
+import * as migration_20261124_114830_pages from './20261124_114830_pages';
 
 export const migrations = [
   {
@@ -22,6 +23,11 @@ export const migrations = [
   {
     up: migration_20261124_114041_media.up,
     down: migration_20261124_114041_media.down,
-    name: '20261124_114041_media'
+    name: '20261124_114041_media',
+  },
+  {
+    up: migration_20261124_114830_pages.up,
+    down: migration_20261124_114830_pages.down,
+    name: '20261124_114830_pages'
   },
 ];
