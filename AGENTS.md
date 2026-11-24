@@ -68,6 +68,7 @@ This project uses `@tanstack/react-query` for client-owned server state. Before 
 
 - Use Node 24 LTS and pnpm 12.23.0, as declared in `.node-version` and `package.json`. Use only `pnpm-lock.yaml`; install with `pnpm install --frozen-lockfile`.
 - Follow [docs/architecture.md](docs/architecture.md): `app` composes features; features use shared code, not other features; shared modules do not import features or `app`.
+- Payload CMS runs in this app; read the Payload section of [docs/architecture.md](docs/architecture.md) before touching `payload/` or `payload.config.ts`. A schema change ships with its migration and regenerated `payload-types.ts` in the same change. Never enable `push` outside development and never edit `app/(payload)` by hand.
 - Treat the removable task example as a server-validation/local-state demonstration, not production persistence. Do not add a mutable global server store or unnecessary Query caching.
 - Read server environment variables only through `lib/env.ts`. Add each new variable to `lib/env-schema.ts` and `.env.example` in the same change; never read `process.env` elsewhere in server code.
 - Keep secrets and privileged access in `server-only` modules. Return minimal safe DTOs and recheck authorization inside each real mutation boundary.
@@ -77,13 +78,14 @@ This project uses `@tanstack/react-query` for client-owned server state. Before 
 - Unit tests use Vitest and live next to the code as `*.test.ts(x)`. They run without a database, a browser, or a `.env` file; keep it that way so `pnpm test` works on a clean checkout.
 - Test domain logic and every boundary that accepts untrusted input: schemas, parsers, access rules, result-to-error-code mapping. Do not test framework behavior or markup details.
 - Before refactoring untested logic, write a characterization test that pins the current behavior. Do not change it in the same change as the refactor.
+- Integration tests in `tests/int/` run the CMS against a real Postgres database through the Local API. Use them for access rules and hooks, always with `overrideAccess: false` and an explicit `user`. They delete data and only run against a database named `*_test`.
 - End-to-end tests use Playwright in `e2e/` and run against the production build. Keep them to a few flows that prove the app works end to end.
 - Never skip, delete, or loosen a test to obtain a green run. Fix the cause, or change the test only when the intended behavior has explicitly changed.
 
 # Definition of done
 
 - Add or update tests for the behavior you changed.
-- Run `pnpm check` (lint and typecheck), `pnpm test`, and `pnpm build` before handing off an implementation. Run `pnpm test:e2e` when routing, forms, or page composition changed.
+- Run `pnpm check` (lint and typecheck), `pnpm test`, and `pnpm build` before handing off an implementation. Run `pnpm test:int` when collections, access rules, or hooks changed, and `pnpm test:e2e` when routing, forms, or page composition changed.
 - Leave visual and acceptance QA to the user. Hand off a concise checklist of affected behavior and expected results for the user to verify; [verification](docs/verification.md) provides manual-check guidance.
 - Report commands, pass/fail results, and every unrun check with its reason. Passing tests are not evidence of visual correctness. Do not call blocked or unverified requirements complete.
 - Never disable lint rules or skip required checks merely to obtain a green run. Fix the cause. Change a requirement only when the intended behavior has explicitly changed.

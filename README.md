@@ -7,15 +7,17 @@ Next.js App Router template for AI-assisted development, with strict TypeScript,
 Prerequisites: **Node 24 LTS** (see [`.node-version`](.node-version)) and **pnpm 12.23.0** (see [`package.json`](package.json)). Select Node with your runtime manager; install pnpm following its [official installation guide](https://pnpm.io/installation), selecting this exact version. Do not change the machine's global runtime merely to run this project.
 
 ```sh
-node --version       # v24.x
+node --version       # v24.22.3 or newer 24.x
 pnpm --version       # 12.23.0
 pnpm install --frozen-lockfile
+cp .env.example .env   # then set PAYLOAD_SECRET (openssl rand -hex 32)
+docker compose up -d   # local Postgres matching DATABASE_URL in .env.example
 pnpm dev
 ```
 
-Open [http://localhost:3000/cs](http://localhost:3000/cs). The removable task demo and small component gallery are at [http://localhost:3000/cs/example](http://localhost:3000/cs/example).
+Open [http://localhost:3000/cs](http://localhost:3000/cs). The CMS admin is at [http://localhost:3000/admin](http://localhost:3000/admin); the first visit creates the first user. The removable task demo and small component gallery are at [http://localhost:3000/cs/example](http://localhost:3000/cs/example).
 
-No account, database, external API, or secret environment variable is needed. Demo additions exist only in that page's local state: refreshing restores the initial tasks. The server validates additions but does **not** persist them or share them between visitors.
+The app needs a Postgres database and the variables in [`.env.example`](.env.example); it stops at startup and names any variable that is missing or malformed. Any Postgres works in place of Docker: point `DATABASE_URL` at it. Demo additions exist only in that page's local state: refreshing restores the initial tasks. The server validates additions but does **not** persist them or share them between visitors.
 
 `pnpm-lock.yaml` is the only dependency lockfile. Use `pnpm add` for intentional dependency changes and commit the updated manifest and lockfile together. Do not hand-edit the lockfile or broadly allow dependency build scripts; review individual entries in `pnpm-workspace.yaml`.
 
@@ -26,9 +28,13 @@ No account, database, external API, or secret environment variable is needed. De
 | `pnpm dev` | Development server on port 3000 |
 | `pnpm check` | Lint and TypeScript; stops on failure |
 | `pnpm test` | Vitest unit tests |
+| `pnpm test:int` | Migrations and integration tests against a `*_test` Postgres database |
 | `pnpm build` | Production build |
 | `pnpm test:e2e` | Playwright tests against the production build |
 | `pnpm start` | Serve an existing production build |
+| `pnpm payload migrate` | Apply committed database migrations |
+| `pnpm payload migrate:create <name>` | Create a migration after a schema change |
+| `pnpm generate:types` | Regenerate `payload-types.ts` |
 
 For a full local check:
 
@@ -46,12 +52,12 @@ Unit tests sit next to the code as `*.test.ts`; end-to-end tests are in `e2e/`. 
 
 | Area | Files |
 | --- | --- |
-| Starter page | [`app/[locale]/page.tsx`](app/[locale]/page.tsx) |
-| Layout and metadata | [`app/[locale]/layout.tsx`](app/[locale]/layout.tsx) |
+| Starter page | [`app/(frontend)/[locale]/page.tsx`](app/(frontend)/[locale]/page.tsx) |
+| Layout and metadata | [`app/(frontend)/[locale]/layout.tsx`](app/(frontend)/[locale]/layout.tsx) |
 | Design tokens and base CSS | [`app/globals.css`](app/globals.css) |
 | Shared UI primitives | [`components/ui/`](components/ui/) |
 | Reference feature | [`features/example/`](features/example/) |
-| Demo route | [`app/[locale]/example/`](app/[locale]/example/) |
+| Demo route | [`app/(frontend)/[locale]/example/`](app/(frontend)/[locale]/example/) |
 | Small gallery and interactions | [`components/examples/example-gallery.tsx`](components/examples/example-gallery.tsx), [`components/examples/gallery-interactions.tsx`](components/examples/gallery-interactions.tsx) |
 | Czech UI text | [`messages/cs.json`](messages/cs.json), [`messages/example.cs.json`](messages/example.cs.json) |
 | Locale setup/message composition | [`i18n/routing.ts`](i18n/routing.ts), [`i18n/request.ts`](i18n/request.ts) |

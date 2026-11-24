@@ -19,6 +19,13 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["**/*.test.{ts,tsx}"],
-    exclude: ["node_modules/**", ".next/**", "e2e/**", ".agents/**", ".claude/**"],
+    exclude: [
+      "node_modules/**",
+      ".next/**",
+      "e2e/**",
+      "tests/int/**",
+      ".agents/**",
+      ".claude/**",
+    ],
   },
 });

@@ -24,6 +24,9 @@
 # production
 /build
 
+# local CMS uploads
+/media/
+
 # test output
 /test-results/
 /playwright-report/
