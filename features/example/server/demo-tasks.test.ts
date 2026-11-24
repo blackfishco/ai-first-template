@@ -20,7 +20,13 @@ describe("createDemoTask", () => {
 
 describe("getDemoTasks", () => {
   it("returns a new list on every read", () => {
-    expect(getDemoTasks()).not.toBe(getDemoTasks());
-    expect(getDemoTasks()).toEqual(getDemoTasks());
+    expect(getDemoTasks("cs")).not.toBe(getDemoTasks("cs"));
+    expect(getDemoTasks("cs")).toEqual(getDemoTasks("cs"));
+  });
+
+  it("returns the tasks in the requested language", () => {
+    expect(getDemoTasks("en").map((task) => task.text)).not.toEqual(
+      getDemoTasks("cs").map((task) => task.text),
+    );
   });
 });

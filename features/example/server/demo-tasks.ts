@@ -4,16 +4,23 @@ import { randomUUID } from "node:crypto";
 
 import { err, ok, type Result } from "neverthrow";
 
-import exampleMessages from "@/messages/example.cs.json";
+import type { Locale } from "@/i18n/config";
+import exampleCsMessages from "@/messages/example.cs.json";
+import exampleEnMessages from "@/messages/example.en.json";
 
 import { type CreateTaskInput } from "../schema";
 import { type CreateTaskError, type Task } from "../types";
 
-export function getDemoTasks(): Task[] {
+const INITIAL_TASKS = {
+  cs: exampleCsMessages.Example.initialTasks,
+  en: exampleEnMessages.Example.initialTasks,
+} satisfies Record<Locale, { layout: string; mobile: string }>;
+
+export function getDemoTasks(locale: Locale): Task[] {
   // Fresh values on each read; never a mutable module-global visitor store.
   return [
-    { id: "demo-layout", text: exampleMessages.Example.initialTasks.layout },
-    { id: "demo-mobile", text: exampleMessages.Example.initialTasks.mobile },
+    { id: "demo-layout", text: INITIAL_TASKS[locale].layout },
+    { id: "demo-mobile", text: INITIAL_TASKS[locale].mobile },
   ];
 }
 

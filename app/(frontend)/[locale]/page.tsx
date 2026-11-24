@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -18,6 +19,7 @@ export default function Home() {
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-6 py-12 sm:py-20">
+      <LocaleSwitcher />
       <header className="flex max-w-2xl flex-col items-start gap-5">
         <Badge variant="secondary">{t("badge")}</Badge>
         <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">

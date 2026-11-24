@@ -8,6 +8,7 @@ import { en } from "@payloadcms/translations/languages/en";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 
+import { DEFAULT_LOCALE, LOCALE_LABELS, LOCALES } from "./i18n/config";
 import { loadServerEnv } from "./lib/env-schema";
 import { Users } from "./payload/collections/users";
 
@@ -35,6 +36,13 @@ export default buildConfig({
     // committed migrations only; see docs/architecture.md.
     push: env.NODE_ENV === "development",
   }),
+  // Content languages; the same list drives the site's routing.
+  localization: {
+    locales: LOCALES.map((code) => ({ code, label: LOCALE_LABELS[code] })),
+    defaultLocale: DEFAULT_LOCALE,
+    fallback: true,
+  },
+  // Languages of the admin interface.
   i18n: {
     supportedLanguages: { cs, en },
     fallbackLanguage: "cs",

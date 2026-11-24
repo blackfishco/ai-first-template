@@ -41,5 +41,10 @@
   "Notifications": {
     "close": "Zavřít oznámení",
     "viewport": "Oznámení"
+  },
+  "LocaleSwitcher": {
+    "label": "Jazyk",
+    "cs": "Čeština",
+    "en": "English"
   }
 }

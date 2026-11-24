@@ -3,10 +3,10 @@ import "../../globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { notFound } from "next/navigation";
-import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider } from "next-intl";
 
 import { AppProviders } from "@/app/providers";
-import { routing } from "@/i18n/routing";
+import { isLocale, LOCALES } from "@/i18n/config";
 import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
 
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+  return LOCALES.map((locale) => ({ locale }));
 }
 
 export default async function RootLayout({
@@ -38,7 +38,7 @@ export default async function RootLayout({
 }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
 
-  if (!hasLocale(routing.locales, locale)) {
+  if (!isLocale(locale)) {
     notFound();
   }
 

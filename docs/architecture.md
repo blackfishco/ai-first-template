@@ -49,6 +49,15 @@ Payload runs inside the same Next.js app. The site lives in the `app/(frontend)`
 - **End users.** Site visitors are not CMS users. If a project needs visitor accounts, add a separate auth collection (for example `customers`) with its own access rules and a feature in `features/` that owns the sign-in flow. Do not add visitor roles to `users`: everyone in that collection can open the admin.
 - **Locale routing.** [`proxy.ts`](../proxy.ts) excludes `/admin` and `/api` from locale handling. Add any other non-localized route to its matcher.
 
+## Languages
+
+[`i18n/config.ts`](../i18n/config.ts) is the only list of the site's languages. Routing, message loading, and the CMS content locales all read it. The default language has no URL prefix (`/about`); the others do (`/en/about`). A visitor whose browser prefers another configured language is redirected to it on the first visit.
+
+- **Site text** lives in `messages/<locale>.json`. Czech is the reference shape: [`i18n/messages.ts`](../i18n/messages.ts) fails typecheck when a language misses a key.
+- **CMS content** is localized per field (`localized: true`), never as one document per language. Every content query passes the request language from [`getContentLocale()`](../lib/cms/locale.ts); without it Payload returns the default language on every page.
+- **Add a language:** add it to `LOCALES` and `LOCALE_LABELS`, add `messages/<locale>.json`, register it in `i18n/messages.ts`, then run `pnpm payload migrate:create add-<locale>` and `pnpm generate:types`. Typecheck and `i18n/config.test.ts` point at anything missed.
+- **Use one language only:** reduce `LOCALES` to it, delete the other message files and their imports, remove the `LocaleSwitcher`, and create a migration. Keep the `[locale]` segment; it costs nothing and keeps a second language cheap to add later.
+
 ## Environment
 
 [`lib/env-schema.ts`](../lib/env-schema.ts) is the only definition of server environment variables. [`lib/env.ts`](../lib/env.ts) validates them once at startup and is the only place server code reads them; a missing or malformed variable stops the build or the server with an error that names the variable, never its value. Add a variable to the schema and to [`.env.example`](../.env.example) in the same change. The schema module stays free of `server-only` so CLI tools outside Next.js can reuse it.
