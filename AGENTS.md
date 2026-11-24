@@ -66,13 +66,51 @@ This project uses `@tanstack/react-query` for client-owned server state. Before 
 
 # Local architecture and tooling
 
-- Use Node 24 LTS and pnpm 12.23.0, as declared in `.node-version` and `package.json`. Use only `pnpm-lock.yaml`; install with `pnpm install --frozen-lockfile`.
-- Follow [docs/architecture.md](docs/architecture.md): `app` composes features; features use shared code, not other features; shared modules do not import features or `app`.
-- Payload CMS runs in this app; read the Payload section of [docs/architecture.md](docs/architecture.md) before touching `payload/` or `payload.config.ts`. A schema change ships with its migration and regenerated `payload-types.ts` in the same change. Never enable `push` outside development and never edit `app/(payload)` by hand.
+- Use Node 24 LTS (24.22.3 or newer) and pnpm 12.23.0, as declared in `.node-version` and `package.json`. Use only `pnpm-lock.yaml`; install with `pnpm install --frozen-lockfile`.
+- Follow [docs/architecture.md](docs/architecture.md): `app` composes features; features use shared code, not other features; shared modules do not import features or `app`. A route passes feature-owned UI into shared components as slots.
+- Use the terms in [CONTEXT.md](CONTEXT.md) in code, comments, commits, and answers. Add the project's domain terms there.
+- Read [docs/decisions.md](docs/decisions.md) before changing something that looks odd; the reason is usually recorded. Add an entry in the same change whenever you make a decision a later reader would question.
+- Read server environment variables only through `lib/env.ts`. Add each new variable to `lib/env-schema.ts`, `.env.example`, and [docs/environments.md](docs/environments.md) in the same change; never read `process.env` elsewhere in server code.
+- Keep secrets and privileged access in `server-only` modules. Return small view types and recheck authorization inside each real mutation boundary.
 - `features/contact` is the reference for a form: schema with error codes, Server Action, typed result, and translated messages. Follow it for new forms. Do not add a mutable global server store or unnecessary Query caching.
-- A Server Action runs outside a route, so it cannot read the `[locale]` segment. Pass the language from the client as an argument and validate it with `isLocale`.
-- Read server environment variables only through `lib/env.ts`. Add each new variable to `lib/env-schema.ts` and `.env.example` in the same change; never read `process.env` elsewhere in server code.
-- Keep secrets and privileged access in `server-only` modules. Return minimal safe DTOs and recheck authorization inside each real mutation boundary.
+- Unexpected errors go to `captureError()` in `lib/observability.ts`. Do not log personal data or secrets anywhere else.
+
+# Payload CMS
+
+Payload runs in this app. Read the `payload` skill and the Payload section of [docs/architecture.md](docs/architecture.md) before touching `payload/`, `payload.config.ts`, or code that reads CMS content.
+
+- **The Local API skips access control by default.** Anything served to a visitor passes `overrideAccess: false`. When you bypass access on purpose, say why in a comment next to the call.
+- **Every content read passes the language**: `locale` from `getContentLocale()` and `fallbackLocale`.
+- **A schema change ships with its migration and regenerated `payload-types.ts`** in the same change; see [docs/migrations.md](docs/migrations.md). Never enable `push` outside development. Never edit a merged migration or anything in `app/(payload)`.
+- **A Server Action runs outside a route** and cannot read the `[locale]` segment. Pass the language from the client as an argument and validate it with `isLocale`.
+- **Content written by a script is not revalidated.** Pass `context: { disableRevalidate: true }` and clear the cache afterwards, as `scripts/seed.ts` does.
+- Site visitors are not CMS accounts. Do not add visitor roles to `users`; add a separate auth collection and a feature.
+
+# Hard rules of this project
+
+Rules specific to the project built from this template go here. Each rule states what must hold and why, so nobody removes it later as unexplained. Example of the shape:
+
+- **Prices are computed only in `lib/pricing`.** Components call it and never repeat a formula. Two copies once disagreed on the invoice and the order summary.
+
+Delete the example and add the project's rules as they appear. Keep this section short: a rule belongs here only when breaking it costs money, leaks data, or cannot be undone.
+
+# Skills
+
+Skills live in `.agents/skills/` and are linked into `.claude/skills/`. Read the matching `SKILL.md` before the work it covers.
+
+- `payload`: anything in `payload/`, `payload.config.ts`, migrations, or code that reads CMS content. It wins over other skills on Payload questions.
+- `data-access-setup`: planning a new external data source or API client. It produces a plan and changes no files.
+- `react-hook-form`: building or changing a form.
+- `react-query-server-action-errors`: a Server Action whose expected errors reach the interface.
+- `react-use-client-boundary`: adding `"use client"`, hooks, event handlers, or browser APIs.
+- `react-useeffect-avoid`, `react-use-state`, `react-use-callback`, `react-key-prop`: the React question in their name.
+- `typescript-*`: typing strategy and type-level questions.
+
+# Commits and pull requests
+
+- One ticket, one branch, one pull request. Commit messages follow Conventional Commits with the ticket as the scope: `feat(bf-123): add the price list block`. commitlint enforces it; `deps`, `release`, and `repo` are the scopes for work without a ticket.
+- Fill in [the pull request template](.github/pull_request_template.md). List what was not verified and why; do not leave that section empty to look finished.
+- If you find a bug outside the ticket, describe it in the pull request and propose a ticket. Do not fix it in the same change.
 
 # Testing
 

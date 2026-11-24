@@ -66,7 +66,7 @@ Unit tests sit next to the code as `*.test.ts`; end-to-end tests are in `e2e/`. 
 | Locale setup/message composition | [`i18n/routing.ts`](i18n/routing.ts), [`i18n/request.ts`](i18n/request.ts) |
 | Query and toast providers | [`app/providers.tsx`](app/providers.tsx) |
 
-Keep layout changes local, recurring UI styling in shared component variants, and site-wide design changes in tokens. Ask before expanding a change's scope. Read [architecture](docs/architecture.md) for data flow and import rules, and [AGENTS.md](AGENTS.md) for agent instructions.
+Keep layout changes local, recurring UI styling in shared component variants, and site-wide design changes in tokens. Ask before expanding a change's scope. Read [architecture](docs/architecture.md) for data flow and import rules, [decisions](docs/decisions.md) for why things are the way they are, [CONTEXT.md](CONTEXT.md) for the vocabulary, and [AGENTS.md](AGENTS.md) for agent instructions.
 
 ## CI and delivery
 
