@@ -38,6 +38,9 @@ export const serverEnvSchema = z.object({
   // Bearer token of scheduled jobs (Vercel Cron sends it automatically).
   // Without it the jobs endpoint accepts signed-in admins only.
   CRON_SECRET: z.string().min(16).optional(),
+  // Read by scripts/vercel-build.ts; see lib/deploy/migration-policy.ts.
+  PREVIEW_DATABASE_ISOLATED: z.string().optional(),
+  MIGRATE_ON_BUILD: z.string().optional(),
   // Read by scripts/seed.ts, which runs only when this is exactly `true`.
   ALLOW_SEED: z.string().optional(),
   // E-mail through Resend. Both are needed; without them e-mails are written

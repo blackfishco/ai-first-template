@@ -115,8 +115,23 @@ test("a published CMS page is served in both languages and follows edits", async
   await visitor.close();
 });
 
-test("an unknown address is a 404", async ({ page }) => {
-  const response = await page.goto("/this-page-does-not-exist");
+test("an unknown address is a translated 404", async ({ browser }) => {
+  const czech = await browser.newContext({ locale: "cs-CZ" });
+  const czechPage = await czech.newPage();
+  const response = await czechPage.goto("/this-page-does-not-exist");
 
   expect(response?.status()).toBe(404);
+  await expect(czechPage.getByRole("heading", { level: 1 })).toHaveText(
+    "Stránka nenalezena",
+  );
+  await czech.close();
+
+  const english = await browser.newContext({ locale: "en-US" });
+  const englishPage = await english.newPage();
+  await englishPage.goto("/en/this-page-does-not-exist");
+
+  await expect(englishPage.getByRole("heading", { level: 1 })).toHaveText(
+    "Page not found",
+  );
+  await english.close();
 });

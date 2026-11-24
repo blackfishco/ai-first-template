@@ -1,5 +1,9 @@
 # Payload CMS branch
 
+**Payload is already installed in this template.** Do not plan an installation. Use the `payload` skill for work inside the existing setup: collections, blocks, fields, access rules, migrations, and reading content. Use this branch only to plan a new content model or a new consumer of CMS data, and read the existing setup first: `payload.config.ts`, `payload/`, and the Payload section of `docs/architecture.md`.
+
+The rest of this page lists what a plan must cover. Items the template already provides (route group, config, admin accounts, migrations workflow, environment variables, generated types) are settled; a plan states that it reuses them.
+
 Use this branch when Payload is owned by the Next.js application.
 Prefer Payload Local API for same-process server access; expose HTTP only for real external consumers or browser requirements.
 

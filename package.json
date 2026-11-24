@@ -1,5 +1,5 @@
 {
-  "name": "vitek-template",
+  "name": "master-repo-template",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "vercel-build": "node scripts/vercel-build.ts",
     "start": "next start",
     "payload": "payload",
     "generate:types": "payload generate:types",

@@ -2,6 +2,30 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-24 — No error tracker is installed; errors go through one seam (BF-984)
+
+**What.** Unhandled errors go to `captureError()`, which logs them without personal data. No Sentry SDK is installed. A project plugs a tracker in with `setErrorReporter`.
+
+**Why.** The ticket asked for Sentry as an optional module. The SDK wraps the Next.js config, adds client and server setup files, and ships browser code to every visitor whether or not a DSN is set. Not every project uses Sentry, and removing it is more work than adding it. The seam keeps the one decision that matters, a single place for errors with scrubbing, and leaves the vendor to the project.
+
+**Where.** `lib/observability.ts`, `instrumentation.ts`, `docs/architecture.md`.
+
+## 2026-11-24 — Preview builds do not migrate until previews have their own database (BF-983)
+
+**What.** The build script migrates on production. On a preview it migrates only when `PREVIEW_DATABASE_ISOLATED=true`.
+
+**Why.** A build migrates whatever database `DATABASE_URL` points at. An earlier project shared one database between production and preview, so every preview build of an unmerged branch migrated production. The safe default costs a preview that needs a new migration and fails until the project sets up a database per preview; that failure is visible and harmless.
+
+**Where.** `lib/deploy/migration-policy.ts`, `scripts/vercel-build.ts`, `docs/environments.md`.
+
+## 2026-11-24 — No Content Security Policy in the template (BF-983)
+
+**What.** The template sends HSTS, `nosniff`, frame, referrer, and permissions headers, and no Content Security Policy.
+
+**Why.** A policy that blocks inline scripts needs a per-request nonce. Next.js then renders every page dynamically, which gives up static generation and the cache for the whole site. That trade depends on the project, and so do the allowed third-party hosts. A project that needs a policy adds the nonce in `proxy.ts` and accepts dynamic rendering.
+
+**Where.** `lib/security/headers.ts`, `next.config.ts`.
+
 ## 2026-11-24 — The contact form replaces the task example (BF-981)
 
 **What.** `features/example` and its gallery are removed. `features/contact` is now the reference for a form, a Server Action, and the error contract. This supersedes the entry "The task example stays until the contact form replaces it".

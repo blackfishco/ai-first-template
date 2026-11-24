@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { reloadOnStaleDeployment } from "@/lib/stale-deployment";
 
 import { submitContactAction } from "../actions";
 import {
@@ -55,10 +56,11 @@ export function ContactForm() {
 
   const submit = handleSubmit(async (values) => {
     setStatus("idle");
-    // A rejected call means the server could not be reached at all.
+    // A rejected call means the server could not be reached, or this tab is
+    // older than the deployed version; then the page reloads.
     const result = await ResultAsync.fromPromise(
       submitContactAction(values, locale),
-      () => "UNAVAILABLE" as const,
+      (error) => (reloadOnStaleDeployment(error) ? "STALE" : "UNAVAILABLE"),
     ).unwrapOr({ success: false, code: "UNAVAILABLE" } as const);
 
     if (result.success) {

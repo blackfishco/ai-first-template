@@ -34,5 +34,13 @@
       "INVALID_EMAIL": "Zadejte platnou e-mailovou adresu.",
       "UNAVAILABLE": "Server se nepodařilo zastihnout. Zkuste to prosím znovu; to, co jste napsali, zůstalo ve formuláři."
     }
+  },
+  "Errors": {
+    "unexpectedTitle": "Něco se pokazilo",
+    "unexpectedDescription": "Stránku se nepodařilo načíst. Zkuste to prosím znovu.",
+    "retry": "Zkusit znovu",
+    "notFoundTitle": "Stránka nenalezena",
+    "notFoundDescription": "Na této adrese nic není. Možná se stránka přesunula.",
+    "backHome": "Zpět na úvod"
   }
 }
