@@ -192,6 +192,7 @@ export interface Media {
    * Describe what the image shows. Screen readers and search engines read it. Not needed for PDF.
    */
   alt?: string | null;
+  seedKey?: string | null;
   blurDataUrl?: string | null;
   prefix?: string | null;
   _objectKey?: string | null;
@@ -623,6 +624,7 @@ export interface ContactFormBlockSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  seedKey?: T;
   blurDataUrl?: T;
   prefix?: T;
   _objectKey?: T;

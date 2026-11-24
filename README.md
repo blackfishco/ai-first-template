@@ -12,6 +12,8 @@ pnpm --version       # 12.23.0
 pnpm install --frozen-lockfile
 cp .env.example .env   # then set PAYLOAD_SECRET (openssl rand -hex 32)
 docker compose up -d   # local Postgres matching DATABASE_URL in .env.example
+pnpm payload migrate   # create the database schema
+ALLOW_SEED=true pnpm seed   # optional: demo pages, navigation and an image
 pnpm dev
 ```
 
@@ -35,6 +37,7 @@ The app needs a Postgres database and the variables in [`.env.example`](.env.exa
 | `pnpm payload migrate` | Apply committed database migrations |
 | `pnpm payload migrate:create <name>` | Create a migration after a schema change |
 | `pnpm generate:types` | Regenerate `payload-types.ts` |
+| `ALLOW_SEED=true pnpm seed` | Fill the CMS with demo content in every language |
 
 For a full local check:
 
