@@ -1,18 +1,11 @@
+import { testDatabaseProblem } from "../../lib/testing/test-database";
+
 /**
- * Guards the integration suite. The tests delete data, so they only run
- * against a database whose name ends with `_test`. `pnpm test:int` applies the
- * committed migrations to it before the suite starts.
+ * Guards the integration suite. `pnpm test:int` runs the same check before it
+ * migrates (scripts/check-test-database.ts); this one covers a direct
+ * `vitest --config vitest.int.config.ts` run.
  */
 export default function setup(): void {
-  const url = process.env.DATABASE_URL;
-  if (!url) {
-    throw new Error("Integration tests need DATABASE_URL.");
-  }
-
-  const database = new URL(url).pathname.slice(1);
-  if (!database.endsWith("_test")) {
-    throw new Error(
-      `Integration tests delete data and only run against a database named *_test (got "${database}").`,
-    );
-  }
+  const problem = testDatabaseProblem(process.env.DATABASE_URL);
+  if (problem) throw new Error(problem);
 }

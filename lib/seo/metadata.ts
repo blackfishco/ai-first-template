@@ -23,8 +23,11 @@ export interface SeoInput {
 
 /** Path of a page in a language: the default language has no prefix. */
 export function localizedPath(path: string, locale: Locale): string {
+  // Read as a string first: with a single language the check below leaves no
+  // other language for the type checker to see.
+  const segment: string = locale;
   if (locale === DEFAULT_LOCALE) return path;
-  return path === "/" ? `/${locale}` : `/${locale}${path}`;
+  return path === "/" ? `/${segment}` : `/${segment}${path}`;
 }
 
 /**

@@ -12,14 +12,13 @@ Prerequisites: **Node 24.22.3 or newer 24.x** (see [`.node-version`](.node-versi
 pnpm install --frozen-lockfile
 cp .env.example .env            # then set PAYLOAD_SECRET (openssl rand -hex 32)
 docker compose up -d            # local Postgres matching DATABASE_URL in .env.example
-pnpm payload migrate            # create the database schema
 ALLOW_SEED=true pnpm seed       # optional: demo pages, navigation and an image
 pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). The admin is at [http://localhost:3000/admin](http://localhost:3000/admin); the first visit creates the first account, which becomes an admin.
 
-Any Postgres works in place of Docker: point `DATABASE_URL` at it. The app stops at startup and names any environment variable that is missing or malformed. Until a page with the slug `home` is published, the home page points to the admin.
+In development the CMS creates and updates the database schema by itself on start; do not run `pnpm payload migrate` on a development database. Any Postgres works in place of Docker: point `DATABASE_URL` at it. The app stops at startup and names any environment variable that is missing or malformed. Until a page with the slug `home` is published, the home page points to the admin.
 
 `pnpm-lock.yaml` is the only lockfile. Use `pnpm add` for dependency changes and commit the manifest and lockfile together. Do not broadly allow dependency build scripts; review entries in `pnpm-workspace.yaml` one by one.
 
@@ -35,7 +34,7 @@ Any Postgres works in place of Docker: point `DATABASE_URL` at it. The app stops
 | `pnpm test:e2e` | End-to-end tests (Playwright) against the production build |
 | `pnpm vercel-build` | Deployment build: migrate when allowed, then build |
 | `pnpm start` | Serve an existing production build |
-| `pnpm payload migrate` | Apply committed database migrations |
+| `pnpm payload migrate` | Apply committed migrations (deployments and test databases, not development) |
 | `pnpm payload migrate:create <name>` | Create a migration after a schema change |
 | `pnpm generate:types` | Regenerate `payload-types.ts` |
 | `ALLOW_SEED=true pnpm seed` | Fill the CMS with demo content in every language |
@@ -43,6 +42,7 @@ Any Postgres works in place of Docker: point `DATABASE_URL` at it. The app stops
 A full local check:
 
 ```sh
+createdb -h 127.0.0.1 -U template template_test   # once
 pnpm check
 pnpm test
 DATABASE_URL=postgres://template:template@127.0.0.1:5432/template_test pnpm test:int

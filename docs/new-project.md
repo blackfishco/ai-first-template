@@ -33,12 +33,13 @@ Keep the tests, the environment validation, and the migrations workflow.
 pnpm install --frozen-lockfile
 cp .env.example .env            # set PAYLOAD_SECRET
 docker compose up -d
-pnpm payload migrate
 ALLOW_SEED=true pnpm seed
 pnpm dev
 ```
 
 Open `/admin`, create the first account, and look at the seeded site. Then run the full check from the README.
+
+Do not run `pnpm payload migrate` here. In development the CMS creates the schema by itself the first time it starts, including when the seed runs. Migrations are for deployments and for the test database; see [migrations](migrations.md).
 
 ## 5. Set up hosting
 

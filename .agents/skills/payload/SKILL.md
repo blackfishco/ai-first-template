@@ -75,5 +75,5 @@ Use `payload run scripts/<name>.ts`. Start a transaction with `payload.db.beginT
 - **A visitor sees a draft, or an editor's content is missing.** Check `overrideAccess` and the `read` access of the collection.
 - **English shows Czech.** The loader does not pass `locale`, or the field is not `localized`.
 - **A saved change does not show.** The loader has no tag, the collection has no revalidation hook, or the write came from a script.
-- **`migrate` fails locally on an existing table.** The database was built with `push`. Recreate it and run the migrations.
+- **`migrate` warns about data loss locally.** It ran on a development database, which syncs by itself. Do not run `migrate` there; see `docs/migrations.md`.
 - **Typecheck fails after a config change.** Run `pnpm generate:types`.

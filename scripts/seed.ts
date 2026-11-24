@@ -44,7 +44,10 @@ async function clearLocalDataCache(): Promise<void> {
   );
 }
 
-const otherLocales = LOCALES.filter((locale) => locale !== DEFAULT_LOCALE);
+// Typed as a list of languages so the script also compiles with a single language.
+const otherLocales: Locale[] = LOCALES.filter(
+  (locale) => locale !== DEFAULT_LOCALE,
+);
 
 type SeedRequest = Partial<PayloadRequest>;
 

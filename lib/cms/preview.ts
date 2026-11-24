@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 
 import { DEFAULT_LOCALE, isLocale } from "../../i18n/config";
+import { localizedPath } from "../seo/metadata";
 import { HOME_SLUG } from "../slug";
 
 /**
@@ -19,12 +20,10 @@ interface PreviewTarget {
 export function previewPath(target: PreviewTarget): string | null {
   if (target.collection !== "pages" || !target.slug) return null;
 
-  const prefix =
-    isLocale(target.locale) && target.locale !== DEFAULT_LOCALE
-      ? `/${target.locale}`
-      : "";
-  if (target.slug === HOME_SLUG) return prefix || "/";
-  return `${prefix}/${encodeURIComponent(target.slug)}`;
+  const locale = isLocale(target.locale) ? target.locale : DEFAULT_LOCALE;
+  const path =
+    target.slug === HOME_SLUG ? "/" : `/${encodeURIComponent(target.slug)}`;
+  return localizedPath(path, locale);
 }
 
 export function previewUrl(
