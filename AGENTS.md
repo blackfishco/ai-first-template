@@ -69,6 +69,7 @@ This project uses `@tanstack/react-query` for client-owned server state. Before 
 - Use Node 24 LTS and pnpm 12.23.0, as declared in `.node-version` and `package.json`. Use only `pnpm-lock.yaml`; install with `pnpm install --frozen-lockfile`.
 - Follow [docs/architecture.md](docs/architecture.md): `app` composes features; features use shared code, not other features; shared modules do not import features or `app`.
 - Treat the removable task example as a server-validation/local-state demonstration, not production persistence. Do not add a mutable global server store or unnecessary Query caching.
+- Read server environment variables only through `lib/env.ts`. Add each new variable to `lib/env-schema.ts` and `.env.example` in the same change; never read `process.env` elsewhere in server code.
 - Keep secrets and privileged access in `server-only` modules. Return minimal safe DTOs and recheck authorization inside each real mutation boundary.
 
 # Testing
