@@ -1,4 +1,5 @@
 import { ArrowRightIcon } from "lucide-react";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@/components/ui/badge";
@@ -12,8 +13,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CmsPage } from "@/features/pages/components/cms-page";
+import { getPageMetadata } from "@/features/pages/server/get-page-metadata";
 import { Link } from "@/i18n/navigation";
 import { HOME_SLUG } from "@/lib/slug";
+
+export function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata(HOME_SLUG);
+}
 
 /** The CMS page with the slug `home`, or the starter page until it exists. */
 export default function Home() {

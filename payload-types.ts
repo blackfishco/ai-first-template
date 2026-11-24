@@ -145,6 +145,21 @@ export interface Page {
    */
   slug?: string | null;
   layout?: (HeroBlock | RichTextBlock | CallToActionBlock)[] | null;
+  meta?: {
+    /**
+     * Up to 60 characters. Left empty, the site uses an automatic value.
+     */
+    title?: string | null;
+    /**
+     * Up to 160 characters. Left empty, the site uses an automatic value.
+     */
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    noindex?: boolean | null;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -479,6 +494,14 @@ export interface PagesSelect<T extends boolean = true> {
         hero?: T | HeroBlockSelect<T>;
         richText?: T | RichTextBlockSelect<T>;
         callToAction?: T | CallToActionBlockSelect<T>;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        noindex?: T;
       };
   updatedAt?: T;
   createdAt?: T;

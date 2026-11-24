@@ -23,7 +23,18 @@ interface PageQuery {
 function toPageView(doc: Page): PageView | null {
   // A page without a slug has no address yet.
   if (!doc.slug) return null;
-  return { title: doc.title, slug: doc.slug, blocks: doc.layout ?? [] };
+  const image = doc.meta?.image;
+  return {
+    title: doc.title,
+    slug: doc.slug,
+    blocks: doc.layout ?? [],
+    seo: {
+      title: doc.meta?.title ?? null,
+      description: doc.meta?.description ?? null,
+      image: typeof image === "object" ? image : null,
+      noindex: Boolean(doc.meta?.noindex),
+    },
+  };
 }
 
 async function findPage({
@@ -72,8 +83,16 @@ export function getPage(
   );
 }
 
-/** Slugs of every published page, for the sitemap and static generation. */
-export function getPublishedPageSlugs(): ResultAsync<string[], PageLoadError> {
+export interface IndexablePage {
+  slug: string;
+  updatedAt: string;
+}
+
+/** Published pages search engines may index, for the sitemap. */
+export function getIndexablePages(): ResultAsync<
+  IndexablePage[],
+  PageLoadError
+> {
   const load = unstable_cache(
     async () => {
       const payload = await getPayload({ config });
@@ -82,11 +101,15 @@ export function getPublishedPageSlugs(): ResultAsync<string[], PageLoadError> {
         overrideAccess: false,
         pagination: false,
         depth: 0,
-        select: { slug: true },
+        select: { slug: true, meta: { noindex: true }, updatedAt: true },
       });
-      return docs.flatMap((doc) => (doc.slug ? [doc.slug] : []));
+      return docs.flatMap((doc) =>
+        doc.slug && !doc.meta?.noindex
+          ? [{ slug: doc.slug, updatedAt: doc.updatedAt }]
+          : [],
+      );
     },
-    cacheKey("page-slugs"),
+    cacheKey("indexable-pages"),
     { tags: [CACHE_TAGS.pages] },
   );
 

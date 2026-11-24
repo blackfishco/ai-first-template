@@ -28,10 +28,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Titles, descriptions, and indexing rules come from each page; see lib/seo.
 export const metadata: Metadata = {
   metadataBase: new URL(env.SITE_URL),
-  title: "Vývojová šablona",
-  description: "Přehledný základ pro vývoj vlastní aplikace se sdílenými komponentami.",
 };
 
 export function generateStaticParams() {

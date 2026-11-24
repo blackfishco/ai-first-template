@@ -2,6 +2,14 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-24 — End-to-end tests run one at a time (BF-979)
+
+**What.** Playwright runs with one worker.
+
+**Why.** The tests write to one CMS and read one site. Run in parallel, the test that changes site settings failed once: the header showed the old site name while other tests were rendering the same pages. It passed alone and passes serially. Whether a page regeneration that starts before a save can store stale content after it was not investigated further; if editors ever report a save that does not show up, start there.
+
+**Where.** `playwright.config.ts`.
+
 ## 2026-11-24 — CMS data is cached with `unstable_cache` and tags (BF-977)
 
 **What.** Published CMS content is cached with `unstable_cache`, tagged from one registry, and revalidated by CMS hooks with `revalidateTag(tag, { expire: 0 })`. Cache keys include the deployment id. Drafts are never cached.

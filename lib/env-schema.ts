@@ -26,6 +26,12 @@ export const serverEnvSchema = z.object({
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
   // Signs Payload auth tokens. Use a different value in every environment.
   PAYLOAD_SECRET: z.string().min(32),
+  // Search engines index only the Vercel production deployment. On other
+  // hosts, set this to `true` on the production instance.
+  ALLOW_INDEXING: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((value) => value === "true"),
   // Shared secret of the CMS live preview. Without it preview is off and the
   // preview route rejects every request.
   PREVIEW_SECRET: z.string().min(32).optional(),

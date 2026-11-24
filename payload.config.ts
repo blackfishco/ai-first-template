@@ -17,6 +17,7 @@ import { Media } from "./payload/collections/media";
 import { Pages } from "./payload/collections/pages";
 import { Users } from "./payload/collections/users";
 import { SiteSettings } from "./payload/globals/site-settings";
+import { seo } from "./payload/plugins/seo";
 import { mediaStorage } from "./payload/plugins/storage";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -95,5 +96,5 @@ export default buildConfig({
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
   sharp,
-  plugins: [mediaStorage(env.BLOB_READ_WRITE_TOKEN)],
+  plugins: [seo, mediaStorage(env.BLOB_READ_WRITE_TOKEN)],
 });

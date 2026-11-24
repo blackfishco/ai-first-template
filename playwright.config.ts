@@ -8,7 +8,11 @@ const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
 
 export default defineConfig({
   testDir: "./e2e",
-  fullyParallel: true,
+  // The tests write to one CMS and read one site, so they run one at a time.
+  // In parallel, a test that changes shared content (site settings) races
+  // with tests that render the same pages.
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",

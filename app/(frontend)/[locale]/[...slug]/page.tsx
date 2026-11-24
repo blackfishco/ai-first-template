@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { CmsPage } from "@/features/pages/components/cms-page";
+import { getPageMetadata } from "@/features/pages/server/get-page-metadata";
 import { HOME_SLUG, slugProblem } from "@/lib/slug";
 
 /**
@@ -9,6 +11,15 @@ import { HOME_SLUG, slugProblem } from "@/lib/slug";
  */
 export function generateStaticParams() {
   return [];
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/[...slug]">): Promise<Metadata> {
+  const { slug: segments } = await params;
+  const [slug, ...rest] = segments;
+  if (!slug || rest.length > 0 || slugProblem(slug)) return {};
+  return getPageMetadata(slug);
 }
 
 export default async function Page({
