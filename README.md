@@ -33,6 +33,7 @@ The app needs a Postgres database and the variables in [`.env.example`](.env.exa
 | `pnpm test:int` | Migrations and integration tests against a `*_test` Postgres database |
 | `pnpm build` | Production build |
 | `pnpm test:e2e` | Playwright tests against the production build |
+| `pnpm vercel-build` | Deployment build: migrate when allowed, then build |
 | `pnpm start` | Serve an existing production build |
 | `pnpm payload migrate` | Apply committed database migrations |
 | `pnpm payload migrate:create <name>` | Create a migration after a schema change |

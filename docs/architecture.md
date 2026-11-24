@@ -72,6 +72,14 @@ Payload runs inside the same Next.js app. The site lives in the `app/(frontend)`
 - **Add a language:** add it to `LOCALES` and `LOCALE_LABELS`, add `messages/<locale>.json`, register it in `i18n/messages.ts`, then run `pnpm payload migrate:create add-<locale>` and `pnpm generate:types`. Typecheck and `i18n/config.test.ts` point at anything missed.
 - **Use one language only:** reduce `LOCALES` to it, delete the other message files and their imports, remove the `LocaleSwitcher`, and create a migration. Keep the `[locale]` segment; it costs nothing and keeps a second language cheap to add later.
 
+## Deployment
+
+[Environments](environments.md) lists what each environment uses and how to set up Vercel or another host. [Migrations](migrations.md) has the rules for schema changes.
+
+- **Build.** `pnpm vercel-build` runs migrations when [`migrationDecision()`](../lib/deploy/migration-policy.ts) allows it, then builds. Production migrates; a preview migrates only with `PREVIEW_DATABASE_ISOLATED=true`, so a preview can never migrate a database it shares with production.
+- **Health.** `/api/health` answers 200 when the database responds and 503 when it does not.
+- **Headers.** [`securityHeaders()`](../lib/security/headers.ts) applies to every response. There is no Content Security Policy; see [decisions](decisions.md).
+
 ## Environment
 
 [`lib/env-schema.ts`](../lib/env-schema.ts) is the only definition of server environment variables. [`lib/env.ts`](../lib/env.ts) validates them once at startup and is the only place server code reads them; a missing or malformed variable stops the build or the server with an error that names the variable, never its value. Add a variable to the schema and to [`.env.example`](../.env.example) in the same change. The schema module stays free of `server-only` so CLI tools outside Next.js can reuse it.
