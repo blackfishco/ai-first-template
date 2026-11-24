@@ -14,8 +14,8 @@ Follow the repository's [architecture](../../../../docs/architecture.md), not a 
 Example layout, not a requirement to create every file:
 
 ```text
-app/[locale]/example/page.tsx
-features/example/
+app/(frontend)/[locale]/[...slug]/page.tsx
+features/contact/
   components/task-demo.tsx
   server/tasks.ts
   actions.ts

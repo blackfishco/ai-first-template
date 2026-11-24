@@ -2,6 +2,22 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-24 — The contact form replaces the task example (BF-981)
+
+**What.** `features/example` and its gallery are removed. `features/contact` is now the reference for a form, a Server Action, and the error contract. This supersedes the entry "The task example stays until the contact form replaces it".
+
+**Why.** The contact form shows the same contract on something every site needs, and it writes real data.
+
+**Where.** `features/contact/`, `docs/architecture.md`.
+
+## 2026-11-24 — Server Actions receive the language as an argument (BF-981)
+
+**What.** A Server Action that needs the language takes it as an argument from the client and validates it with `isLocale`. `i18n/request.ts` falls back to the default language outside a route.
+
+**Why.** Next.js does not expose root parameters inside Server Actions and Route Handlers; the getter throws there. The end-to-end test of the contact form caught this.
+
+**Where.** `features/contact/actions.ts`, `i18n/root-locale.ts`, `i18n/request.ts`.
+
 ## 2026-11-24 — End-to-end tests run one at a time (BF-979)
 
 **What.** Playwright runs with one worker.

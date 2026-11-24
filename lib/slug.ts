@@ -28,7 +28,7 @@ export const HOME_SLUG = "home";
  * Slugs a page cannot take because a fixed route or a system path owns them.
  * Add every new top-level route of the app here.
  */
-export const RESERVED_SLUGS = ["admin", "api", "example", "next", "media"];
+export const RESERVED_SLUGS = ["admin", "api", "next", "media"];
 
 export type SlugProblem = "reserved" | "format";
 

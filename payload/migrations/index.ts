@@ -6,6 +6,7 @@ import * as migration_20261124_114830_pages from './20261124_114830_pages';
 import * as migration_20261124_115427_site_settings from './20261124_115427_site_settings';
 import * as migration_20261124_121404_seo from './20261124_121404_seo';
 import * as migration_20261124_122116_redirects from './20261124_122116_redirects';
+import * as migration_20261124_122851_contact from './20261124_122851_contact';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20261124_122116_redirects.up,
     down: migration_20261124_122116_redirects.down,
-    name: '20261124_122116_redirects'
+    name: '20261124_122116_redirects',
+  },
+  {
+    up: migration_20261124_122851_contact.up,
+    down: migration_20261124_122851_contact.down,
+    name: '20261124_122851_contact'
   },
 ];

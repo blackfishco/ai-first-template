@@ -15,9 +15,9 @@ docker compose up -d   # local Postgres matching DATABASE_URL in .env.example
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The CMS admin is at [http://localhost:3000/admin](http://localhost:3000/admin); the first visit creates the first user. The removable task demo and small component gallery are at [http://localhost:3000/example](http://localhost:3000/example).
+Open [http://localhost:3000](http://localhost:3000). The CMS admin is at [http://localhost:3000/admin](http://localhost:3000/admin); the first visit creates the first user.
 
-The app needs a Postgres database and the variables in [`.env.example`](.env.example); it stops at startup and names any variable that is missing or malformed. Any Postgres works in place of Docker: point `DATABASE_URL` at it. Demo additions exist only in that page's local state: refreshing restores the initial tasks. The server validates additions but does **not** persist them or share them between visitors.
+The app needs a Postgres database and the variables in [`.env.example`](.env.example); it stops at startup and names any variable that is missing or malformed. Any Postgres works in place of Docker: point `DATABASE_URL` at it. Until a page with the slug `home` is published in the CMS, the home page points to the admin.
 
 `pnpm-lock.yaml` is the only dependency lockfile. Use `pnpm add` for intentional dependency changes and commit the updated manifest and lockfile together. Do not hand-edit the lockfile or broadly allow dependency build scripts; review individual entries in `pnpm-workspace.yaml`.
 
@@ -56,10 +56,8 @@ Unit tests sit next to the code as `*.test.ts`; end-to-end tests are in `e2e/`. 
 | Layout and metadata | [`app/(frontend)/[locale]/layout.tsx`](app/(frontend)/[locale]/layout.tsx) |
 | Design tokens and base CSS | [`app/globals.css`](app/globals.css) |
 | Shared UI primitives | [`components/ui/`](components/ui/) |
-| Reference feature | [`features/example/`](features/example/) |
-| Demo route | [`app/(frontend)/[locale]/example/`](app/(frontend)/[locale]/example/) |
-| Small gallery and interactions | [`components/examples/example-gallery.tsx`](components/examples/example-gallery.tsx), [`components/examples/gallery-interactions.tsx`](components/examples/gallery-interactions.tsx) |
-| UI text | [`messages/cs.json`](messages/cs.json), [`messages/en.json`](messages/en.json) and the `example.*` files |
+| Reference feature | [`features/contact/`](features/contact/) |
+| UI text | [`messages/cs.json`](messages/cs.json), [`messages/en.json`](messages/en.json) |
 | Languages | [`i18n/config.ts`](i18n/config.ts) |
 | Locale setup/message composition | [`i18n/routing.ts`](i18n/routing.ts), [`i18n/request.ts`](i18n/request.ts) |
 | Query and toast providers | [`app/providers.tsx`](app/providers.tsx) |
@@ -76,7 +74,6 @@ For a Node deployment, use Node 24 and pnpm 12.23.0, install with `pnpm install 
 
 ## Remove the demo / prepare a release
 
-- [Exact demo and gallery removal steps](docs/removing-example.md) preserve the starter and providers.
 - [Clean-source installation and release checks](docs/verification.md#clean-source-verification) ensure the project works without the original checkout's dependencies or build output.
 
 Keep skill evaluation working files out of release archives; do not delete a user's local evaluation history to tidy a delivery.

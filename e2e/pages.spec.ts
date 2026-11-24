@@ -34,7 +34,7 @@ test("a published CMS page is served in both languages and follows edits", async
         {
           blockType: "callToAction",
           heading: "Ozvěte se",
-          link: { type: "custom", url: "/example", label: "Na ukázku" },
+          link: { type: "custom", url: "/kontakt", label: "Na ukázku" },
         },
       ],
     },
@@ -53,7 +53,7 @@ test("a published CMS page is served in both languages and follows edits", async
           id: cta?.id,
           blockType: "callToAction",
           heading: "Get in touch",
-          link: { type: "custom", url: "/example", label: "To the example" },
+          link: { type: "custom", url: "/kontakt", label: "To the example" },
         },
       ],
     },
@@ -66,7 +66,7 @@ test("a published CMS page is served in both languages and follows edits", async
   );
   await expect(page.getByRole("link", { name: "Na ukázku" })).toHaveAttribute(
     "href",
-    "/example",
+    "/kontakt",
   );
 
   await page.goto(`/en/${slug}`);
@@ -76,7 +76,7 @@ test("a published CMS page is served in both languages and follows edits", async
   // Internal links keep the visitor's language.
   await expect(
     page.getByRole("link", { name: "To the example" }),
-  ).toHaveAttribute("href", "/en/example");
+  ).toHaveAttribute("href", "/en/kontakt");
 
   // An edit reaches the cached page without a redeploy.
   const edited = await request.patch(`/api/pages/${doc.id}?locale=cs`, {
@@ -88,7 +88,7 @@ test("a published CMS page is served in both languages and follows edits", async
           id: cta?.id,
           blockType: "callToAction",
           heading: "Ozvěte se",
-          link: { type: "custom", url: "/example", label: "Na ukázku" },
+          link: { type: "custom", url: "/kontakt", label: "Na ukázku" },
         },
       ],
     },

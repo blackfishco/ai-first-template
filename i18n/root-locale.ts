@@ -9,7 +9,9 @@ import * as rootParams from "next/root-params";
  * See docs/decisions.md. Replace it with a direct `locale` import once
  * `.next/types/root-params.d.ts` declares it.
  *
- * Resolves to `undefined` on routes outside `app/(frontend)/[locale]`.
+ * Resolves to `undefined` on routes outside `app/(frontend)/[locale]`, and in
+ * Server Actions and Route Handlers, where Next.js does not expose root
+ * parameters and the getter throws.
  */
 export async function getRootLocale(): Promise<string | undefined> {
   const params: unknown = rootParams;
@@ -21,7 +23,12 @@ export async function getRootLocale(): Promise<string | undefined> {
   const getter: unknown = params.locale;
   if (typeof getter !== "function") return undefined;
 
-  // The getter takes no arguments and resolves to the segment value.
-  const value: unknown = await Reflect.apply(getter, params, []);
-  return typeof value === "string" ? value : undefined;
+  try {
+    // The getter takes no arguments and resolves to the segment value.
+    const value: unknown = await Reflect.apply(getter, params, []);
+    return typeof value === "string" ? value : undefined;
+  } catch {
+    // Not in a route: a Server Action or a Route Handler.
+    return undefined;
+  }
 }

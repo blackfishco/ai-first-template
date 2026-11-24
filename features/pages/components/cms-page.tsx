@@ -2,7 +2,10 @@ import { draftMode } from "next/headers";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
-import { RenderBlocks } from "@/components/sections/render-blocks";
+import {
+  type BlockSlots,
+  RenderBlocks,
+} from "@/components/sections/render-blocks";
 import { getPathname } from "@/i18n/navigation";
 import { pagePath } from "@/lib/cms/links";
 import { getContentLocale } from "@/lib/cms/locale";
@@ -12,12 +15,14 @@ import { getPage } from "../server/get-page";
 
 interface CmsPageProps {
   slug: string;
+  /** Feature-owned pieces of blocks, passed by the route that composes the page. */
+  slots: BlockSlots;
   /** Shown when no published page has this slug. Without it the route is a 404. */
   fallback?: ReactNode;
 }
 
 /** Renders the CMS page with the given slug in the request's language. */
-export async function CmsPage({ slug, fallback }: CmsPageProps) {
+export async function CmsPage({ slug, slots, fallback }: CmsPageProps) {
   const locale = await getContentLocale();
   const { isEnabled: draft } = await draftMode();
 
@@ -46,7 +51,7 @@ export async function CmsPage({ slug, fallback }: CmsPageProps) {
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-12 px-6 py-12 sm:py-20">
-      <RenderBlocks blocks={page.blocks} locale={locale} />
+      <RenderBlocks blocks={page.blocks} locale={locale} slots={slots} />
     </main>
   );
 }

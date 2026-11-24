@@ -62,7 +62,7 @@ Do not enable global mutation `throwOnError: true`. Use it per mutation only whe
 ## Existing counterparts
 
 - [Architecture and error layers](../../../docs/architecture.md)
-- [Compiled Server Action](../../../features/example/actions.ts): direct action, no Query adapter.
+- [Compiled Server Action](../../../features/contact/actions.ts): direct action, no Query adapter.
 - [Toast manager/renderer](../../../components/ui/toast.tsx) and [provider integration](../../../app/providers.tsx).
 
 There is no compiled Query mutation example in this template. If a real feature needs this adapter, verify typed action failures and unexpected rejections as part of its acceptance checks.

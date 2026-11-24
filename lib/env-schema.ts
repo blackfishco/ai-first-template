@@ -38,6 +38,14 @@ export const serverEnvSchema = z.object({
   // Bearer token of scheduled jobs (Vercel Cron sends it automatically).
   // Without it the jobs endpoint accepts signed-in admins only.
   CRON_SECRET: z.string().min(16).optional(),
+  // E-mail through Resend. Both are needed; without them e-mails are written
+  // to the server log and nothing fails.
+  RESEND_API_KEY: z.string().min(1).optional(),
+  // Sender address on a domain verified in Resend.
+  EMAIL_FROM: z.email().optional(),
+  EMAIL_FROM_NAME: z.string().min(1).optional(),
+  // Where contact form messages are sent. Without it they are only stored.
+  CONTACT_EMAIL_TO: z.email().optional(),
   // Vercel Blob read-write token. Without it uploads stay on local disk.
   BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
 });

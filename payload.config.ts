@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { resendAdapter } from "@payloadcms/email-resend";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { cs } from "@payloadcms/translations/languages/cs";
 import { en } from "@payloadcms/translations/languages/en";
@@ -13,6 +14,7 @@ import { isAuthorizedBearer, previewPath, previewUrl } from "./lib/cms/preview";
 import { loadServerEnv } from "./lib/env-schema";
 import { hasRole } from "./payload/access/roles";
 import { ADMIN_TITLE_SUFFIX } from "./payload/admin/branding";
+import { ContactMessages } from "./payload/collections/contact-messages";
 import { Media } from "./payload/collections/media";
 import { Pages } from "./payload/collections/pages";
 import { Users } from "./payload/collections/users";
@@ -63,9 +65,20 @@ export default buildConfig({
       },
     },
   },
-  collections: [Pages, Media, Users],
+  collections: [Pages, Media, ContactMessages, Users],
   globals: [SiteSettings],
   editor: lexicalEditor(),
+  // E-mail through Resend when both variables are set. Without them Payload
+  // writes every message to the server log, so local development needs no key.
+  ...(env.RESEND_API_KEY && env.EMAIL_FROM
+    ? {
+        email: resendAdapter({
+          apiKey: env.RESEND_API_KEY,
+          defaultFromAddress: env.EMAIL_FROM,
+          defaultFromName: env.EMAIL_FROM_NAME ?? "",
+        }),
+      }
+    : {}),
   db: postgresAdapter({
     pool: { connectionString: env.DATABASE_URL },
     migrationDir: path.resolve(dirname, "payload/migrations"),

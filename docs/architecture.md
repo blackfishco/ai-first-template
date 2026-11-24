@@ -12,19 +12,21 @@ app ───────────→ shared modules
 - **Shared modules** (`components/`, `lib/`, `hooks/`, `i18n/`, and other shared directories covered by lint) do not import `features/` or `app/`. Keep genuinely shared UI in `components/ui/`; do not move business logic there to bypass a boundary.
 - Prefer direct file imports; avoid barrels mixing server/client code. Create only needed folders, not a generic CRUD/service framework.
 
-[ESLint](../eslint.config.mjs) enforces the direction of imports. The route composes the feature and the independent [gallery](../components/examples/example-gallery.tsx); the gallery does not import the feature. Translation JSON lives in [`messages/`](../messages/) so [`i18n/request.ts`](../i18n/request.ts) can combine namespaces without a cross-feature code import.
+[ESLint](../eslint.config.mjs) enforces the direction of imports. A route composes features and passes feature-owned pieces into shared components as slots. Translation JSON lives in [`messages/`](../messages/), outside features, so every language file has one shape.
 
 ## Reference data flow
 
-Start at [`app/(frontend)/[locale]/example/page.tsx`](../app/(frontend)/[locale]/example/page.tsx), then follow its imports into [`features/example/`](../features/example/).
+The contact form is the reference for a form that writes data. Start at [`features/contact/components/contact-form.tsx`](../features/contact/components/contact-form.tsx) and follow its imports.
 
-1. A Server Component reads deterministic initial tasks from a `server-only` demo module.
-2. The client receives only safe task fields (`id`, `text`) and owns its local additions.
-3. [`createTaskAction`](../features/example/actions.ts) accepts untrusted `FormData`; the server validates it, including the explicit demo-failure control.
-4. Internal logic returns a typed `neverthrow` result. The action converts it to a plain success/task or failure/code union.
-5. The UI branches on that union, showing validation/recovery text or adding the accepted task and confirming success.
+1. [`schema.ts`](../features/contact/schema.ts) defines the fields once. Validation messages are error codes, not text. `parseContactInput` returns a `Result` and never echoes submitted values.
+2. The form uses React Hook Form with the same schema, so most mistakes are caught before a request. It translates error codes with next-intl.
+3. [`submitContactAction`](../features/contact/actions.ts) treats its arguments as untrusted and validates them again on the server. It receives the language as an argument, because a Server Action runs outside a route and cannot read the `[locale]` segment.
+4. [`submitContactMessage`](../features/contact/server/submit-message.ts) returns a `ResultAsync`. It stores the message first and then notifies the owner; a failed notification is logged and does not fail the submission.
+5. The action converts the result to a plain union with safe codes. The form branches on it: field errors next to fields, an alert when the server cannot be reached, and a confirmation on success.
 
-**This demonstrates validation, not persistence.** There is no mutable module-global server list, browser storage, database, user session, or authoritative client-supplied history. Refreshing restores the initial state; one visitor's changes do not affect another. Do not add Query caching or revalidation to pretend these local additions are durable.
+The message is written with `overrideAccess: true` because an anonymous visitor has no CMS account. That is safe only because the collection is closed to the public API and the input was validated one line earlier; say why whenever you bypass access control.
+
+The form's block shows how a page block uses a feature: [`components/sections/contact-form.tsx`](../components/sections/contact-form.tsx) renders a slot, and the route passes `<ContactForm />` into it, because shared components do not import features.
 
 ## Real data boundaries
 
@@ -45,6 +47,7 @@ Payload runs inside the same Next.js app. The site lives in the `app/(frontend)`
 - **Schema changes.** Change the collection, then run `pnpm payload migrate:create <name>`, `pnpm generate:types`, and `pnpm generate:importmap` if admin components changed. Commit the migration and [`payload-types.ts`](../payload-types.ts) with the change. Development syncs the schema directly; every other environment runs `pnpm payload migrate` and never `push`.
 - **Naming.** Postgres truncates identifiers at 63 characters. Give deeply nested fields, blocks, and selects a short `dbName` or `enumName` before the first migration that contains them.
 - **Reading content.** Server code uses the Local API (`getPayload({ config })`) from `server-only` modules and returns minimal DTOs. The Local API skips access control by default: for anything done on behalf of a user, pass `user` and `overrideAccess: false`.
+- **E-mail.** With `RESEND_API_KEY` and `EMAIL_FROM` set, the CMS sends through Resend; without them every message is written to the server log, so local development needs no key. Templates are React Email components next to the feature that sends them, such as [`features/contact/emails/`](../features/contact/emails/).
 - **Accounts and roles.** The `users` collection holds CMS accounts only, with roles `admin` and `editor` ([`payload/access/roles.ts`](../payload/access/roles.ts)). The first account created becomes an admin. Admins invite others: creating an account sends a link to set a password, so passwords are never shared. Without an e-mail adapter the message is written to the server log. Use `isEditor` for content writes, `isAdmin` for accounts and settings, and `publishedOrEditor` for reads on collections with drafts.
 - **Pages and blocks.** A page is a list of blocks. Each block has a config in [`payload/blocks/`](../payload/blocks/) with an `interfaceName`, and a component in [`components/sections/`](../components/sections/). [`render-blocks.tsx`](../components/sections/render-blocks.tsx) maps block types to components; a block without a component fails typecheck. To add a block: write the config, add it to `PAGE_BLOCKS`, create the migration and types, write the component, and add it to the renderer. The page with the slug `home` is the home page; other published pages are served at `/<slug>`.
 - **Links.** Use [`linkField()`](../payload/fields/link.ts) in configs and [`CmsLink`](../components/cms/cms-link.tsx) to render. It resolves the real address in the visitor's language and renders nothing for a link whose target is gone.

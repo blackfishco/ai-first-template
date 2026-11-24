@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { ContactForm } from "@/features/contact/components/contact-form";
 import { CmsPage } from "@/features/pages/components/cms-page";
 import { getPageMetadata } from "@/features/pages/server/get-page-metadata";
 import { HOME_SLUG, slugProblem } from "@/lib/slug";
@@ -33,5 +34,5 @@ export default async function Page({
     notFound();
   }
 
-  return <CmsPage slug={slug} />;
+  return <CmsPage slug={slug} slots={{ contactForm: <ContactForm /> }} />;
 }
