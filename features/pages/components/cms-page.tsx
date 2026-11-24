@@ -1,9 +1,12 @@
 import { draftMode } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect, redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { RenderBlocks } from "@/components/sections/render-blocks";
+import { getPathname } from "@/i18n/navigation";
+import { pagePath } from "@/lib/cms/links";
 import { getContentLocale } from "@/lib/cms/locale";
+import { findRedirect } from "@/lib/redirects/server";
 
 import { getPage } from "../server/get-page";
 
@@ -28,6 +31,16 @@ export async function CmsPage({ slug, fallback }: CmsPageProps) {
 
   if (!page) {
     if (fallback !== undefined) return fallback;
+
+    // Nothing lives here. Follow a redirect an editor set up, or answer 404.
+    const moved = await findRedirect(pagePath(slug)).unwrapOr(null);
+    if (moved) {
+      const target = moved.to.startsWith("/")
+        ? getPathname({ href: moved.to, locale })
+        : moved.to;
+      if (moved.permanent) permanentRedirect(target);
+      redirect(target);
+    }
     notFound();
   }
 

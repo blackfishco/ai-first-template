@@ -197,6 +197,9 @@ importers:
       '@payloadcms/next':
         specifier: 3.94.1
         version: 3.94.1(@types/react@19.3.0)(graphql@16.15.0)(monaco-editor@0.57.0)(next@16.4.6(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.65.1)(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.77.4))(payload@3.94.1(graphql@16.15.0)(supports-color@7.2.0)(typescript@6.0.3))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@7.2.0)(typescript@6.0.3)
+      '@payloadcms/plugin-redirects':
+        specifier: 3.94.1
+        version: 3.94.1(payload@3.94.1(graphql@16.15.0)(supports-color@7.2.0)(typescript@6.0.3))
       '@payloadcms/plugin-seo':
         specifier: 3.94.1
         version: 3.94.1(@types/react@19.3.0)(monaco-editor@0.57.0)(next@16.4.6(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.65.1)(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.77.4))(payload@3.94.1(graphql@16.15.0)(supports-color@7.2.0)(typescript@6.0.3))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@7.2.0)(typescript@6.0.3)
@@ -1913,6 +1916,11 @@ packages:
       payload: 3.94.1
       react: ~19.0.9 || ~19.1.10 || ~19.2.9 || ^19.3.1
       react-dom: ~19.0.9 || ~19.1.10 || ~19.2.9 || ^19.3.1
+
+  '@payloadcms/plugin-redirects@3.94.1':
+    resolution: {integrity: sha512-jhlH866/3PTwEsg7q1xIUVF5AZTXUeRj+tPnLYmh7vXsf9SdA/7loiM30myl1tBjppmX17YT44QBlFhONwuOuQ==}
+    peerDependencies:
+      payload: 3.94.1
 
   '@payloadcms/plugin-seo@3.94.1':
     resolution: {integrity: sha512-ltolEXHKHRlAwxQSNzlX4Q3CgIR0cFWHQ77Jl0ZG+K0Cp7SRFZj/Gv97mBUrDwuNXmxryh/FvcFZFOFmZW0lOw==}
@@ -7645,6 +7653,11 @@ snapshots:
       - next
       - supports-color
       - typescript
+
+  '@payloadcms/plugin-redirects@3.94.1(payload@3.94.1(graphql@16.15.0)(supports-color@7.2.0)(typescript@6.0.3))':
+    dependencies:
+      '@payloadcms/translations': 3.94.1
+      payload: 3.94.1(graphql@16.15.0)(supports-color@7.2.0)(typescript@6.0.3)
 
   '@payloadcms/plugin-seo@3.94.1(@types/react@19.3.0)(monaco-editor@0.57.0)(next@16.4.6(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.65.1)(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.77.4))(payload@3.94.1(graphql@16.15.0)(supports-color@7.2.0)(typescript@6.0.3))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
