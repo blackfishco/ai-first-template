@@ -46,5 +46,10 @@
     "label": "Language",
     "cs": "Čeština",
     "en": "English"
+  },
+  "Site": {
+    "name": "Development template",
+    "mainNavigation": "Main navigation",
+    "footerNavigation": "Footer links"
   }
 }

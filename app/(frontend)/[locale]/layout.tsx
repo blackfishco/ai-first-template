@@ -4,10 +4,14 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 import { AppProviders } from "@/app/providers";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
 import { isLocale, LOCALES } from "@/i18n/config";
 import { env } from "@/lib/env";
+import { getSiteSettings } from "@/lib/site-settings/server";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -42,6 +46,16 @@ export default async function RootLayout({
     notFound();
   }
 
+  const t = await getTranslations({ locale, namespace: "Site" });
+  const settings = await getSiteSettings(locale).match(
+    (found) => found,
+    () => {
+      // The CMS is part of this app; failing to reach it is not recoverable here.
+      throw new Error("The CMS could not be reached while rendering the layout.");
+    },
+  );
+  const siteName = settings.siteName ?? t("name");
+
   return (
     <html
       lang={locale}
@@ -54,7 +68,19 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
-          <AppProviders>{children}</AppProviders>
+          <AppProviders>
+            <SiteHeader
+              siteName={siteName}
+              navigation={settings.headerNav}
+              navigationLabel={t("mainNavigation")}
+            />
+            {children}
+            <SiteFooter
+              siteName={siteName}
+              navigation={settings.footerNav}
+              navigationLabel={t("footerNavigation")}
+            />
+          </AppProviders>
         </NextIntlClientProvider>
       </body>
     </html>

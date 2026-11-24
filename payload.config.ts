@@ -10,9 +10,11 @@ import sharp from "sharp";
 
 import { DEFAULT_LOCALE, LOCALE_LABELS, LOCALES } from "./i18n/config";
 import { loadServerEnv } from "./lib/env-schema";
+import { ADMIN_TITLE_SUFFIX } from "./payload/admin/branding";
 import { Media } from "./payload/collections/media";
 import { Pages } from "./payload/collections/pages";
 import { Users } from "./payload/collections/users";
+import { SiteSettings } from "./payload/globals/site-settings";
 import { mediaStorage } from "./payload/plugins/storage";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -29,8 +31,16 @@ export default buildConfig({
     importMap: {
       baseDir: dirname,
     },
+    meta: { titleSuffix: ` ${ADMIN_TITLE_SUFFIX}` },
+    components: {
+      graphics: {
+        Logo: "/payload/admin/branding#Logo",
+        Icon: "/payload/admin/branding#Icon",
+      },
+    },
   },
   collections: [Pages, Media, Users],
+  globals: [SiteSettings],
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: { connectionString: env.DATABASE_URL },
