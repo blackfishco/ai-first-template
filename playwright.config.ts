@@ -54,7 +54,11 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     // Fixed test-only secret; e2e/preview.spec.ts uses the same value.
-    env: { PREVIEW_SECRET: "e2e-preview-secret-0000000000000000" },
+    env: {
+      PREVIEW_SECRET: "e2e-preview-secret-0000000000000000",
+      // e2e/analytics.spec.ts checks the Google tag; requests to Google are intercepted.
+      ANALYTICS_ENABLED: "true",
+    },
     timeout: 60_000,
   },
 });

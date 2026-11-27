@@ -854,6 +854,10 @@ export interface SiteSetting {
    * Used when a shared page has no image of its own.
    */
   defaultShareImage?: (number | null) | Media;
+  /**
+   * Container ID (GTM-…) or measurement ID (G-…). Loads only on production and only after the visitor consents. Leave empty to switch analytics off.
+   */
+  analyticsTagId?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -876,6 +880,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         id?: T;
       };
   defaultShareImage?: T;
+  analyticsTagId?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

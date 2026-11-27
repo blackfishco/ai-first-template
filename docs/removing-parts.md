@@ -43,6 +43,14 @@ Nothing in the template uses it yet; it is wired in for client-owned server stat
 4. `AGENTS.md`: remove the "Manage server state with TanStack Query" section and the mention in the error-handling section. `docs/architecture.md`: remove the mentions of the Query client and the Query adapter.
 5. Delete `.agents/skills/react-query-server-action-errors`, its link in `.claude/skills/`, and its entry in `skills-lock.json`, or keep it for its Server Action guidance.
 
+## Analytics
+
+1. Delete `features/analytics/`, `lib/analytics/`, and `e2e/analytics.spec.ts`.
+2. `app/(frontend)/[locale]/layout.tsx`: remove `<Analytics />` and the `analyticsKind` lines.
+3. Remove the `analyticsTagId` field from `payload/globals/site-settings.ts` and from `lib/site-settings/server.ts`.
+4. Remove `ANALYTICS_ENABLED` from `lib/env-schema.ts`, `.env.example`, `docs/environments.md`, and the `webServer` env in `playwright.config.ts`.
+5. `pnpm generate:types` and `pnpm payload migrate:create remove-analytics`.
+
 ## Cookie consent
 
 Remove it only when the site sets no cookies beyond the necessary ones and loads no analytics or marketing scripts. Remove the analytics feature first if it is there; it reads consent.

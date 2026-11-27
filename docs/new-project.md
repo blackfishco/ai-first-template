@@ -24,7 +24,8 @@ The template ships more than every project needs. Remove what this one does not,
 - the second language;
 - the contact form and e-mail;
 - TanStack Query;
-- the cookie consent banner.
+- the cookie consent banner;
+- analytics (Google Tag Manager or GA4).
 
 Keep the tests, the environment validation, and the migrations workflow.
 
@@ -72,4 +73,5 @@ Follow [the activation checklist](verification.md#github-activation-pending): re
 - [ ] `/robots.txt` on production allows indexing and lists the sitemap; a preview disallows everything.
 - [ ] The site was checked by hand on a phone and a desktop, in every language.
 - [ ] Redirects from the old site, if there was one, are entered in the admin.
+- [ ] Analytics: the Google tag ID is set in the site settings, and on production a page view arrives in GA4 only after accepting the banner. With Tag Manager, the GA4 tag fires on the `page_view` custom event.
 - [ ] The cookie banner texts in `messages/*.json` (`Consent`) are replaced with the legal wording; no text starts with "ZÁSTUPNÝ TEXT" or "PLACEHOLDER TEXT".

@@ -2,6 +2,19 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-27 — Analytics loads only after consent and only on production (BF-1001)
+
+**What.** One Google tag ID in the CMS site settings, `GTM-…` or `G-…`. The script loads after the visitor consents to analytics, with Consent Mode v2 set before it. Withdrawing consent reloads the page. Page views are sent by the site on every route change. The tag runs on production only.
+
+**Why.**
+- *Not loaded before consent* rather than loaded in Consent Mode's denied state: denied mode still sends cookieless pings to Google, which many Czech DPOs treat as processing without consent. Loading nothing is the answer that needs no discussion.
+- *Reload on withdrawal:* a loaded tag cannot be unloaded, and Tag Manager may have started other tags. A reload is the only way to be sure nothing keeps sending.
+- *One ID:* GA4 next to a container that also sends to GA4 counts everything twice.
+- *Explicit page views:* the site knows when a client-side navigation happens; GA4's history-based detection and Tag Manager's "All Pages" trigger do not agree on it.
+- *Inline lint exception:* `features/analytics/tag.ts` disables `prefer-rest-params` for one line, because gtag.js reads commands only as `arguments` objects; rest parameters produce arrays it ignores.
+
+**Where.** `lib/analytics/tag-id.ts`, `features/analytics/`, `payload/globals/site-settings.ts`, `app/(frontend)/[locale]/layout.tsx`.
+
 ## 2026-11-27 — Cookie consent is part of the template, not a hosted service (BF-1000)
 
 **What.** The template ships its own consent banner (`features/consent`) with three categories and a versioned cookie. The consent state is a shared contract in `lib/consent`.

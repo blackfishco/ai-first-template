@@ -37,6 +37,7 @@ Every variable is defined in [`lib/env-schema.ts`](../lib/env-schema.ts) and des
 | `PREVIEW_DATABASE_ISOLATED` | Not used | `true` once previews have their own database | Not used |
 | `ALLOW_SEED` | **Never set** | Only while seeding | Only while seeding |
 | `ALLOW_INDEXING` | Only off Vercel: `true` | Unset | Unset |
+| `ANALYTICS_ENABLED` | Unset (production loads analytics) | Unset (previews never load it) | Unset |
 
 Use a different secret in every environment. A secret copied from production to preview lets a preview token work on production.
 
@@ -66,7 +67,7 @@ The template ships no Dockerfile; projects that need one add it. The contract is
 
 - **Run migrations once per release, before the new version serves traffic:** `pnpm payload migrate`. Use a release step: a Kubernetes Job as a pre-upgrade hook, a pre-deploy command, or an init step. Do not run it from every replica at startup.
 - Build with `output: "standalone"` and Node 24.22.3 or newer.
-- Set `ALLOW_INDEXING=true` on the production instance only.
+- Set `ALLOW_INDEXING=true` on the production instance only. Analytics follows the same rule.
 - Call `/api/payload-jobs/run` every few minutes with `Authorization: Bearer <CRON_SECRET>` for scheduled publishing.
 - Point the readiness probe at `/api/health`.
 - Media needs shared storage as soon as there is more than one replica; replace the adapter in [`payload/plugins/storage.ts`](../payload/plugins/storage.ts) with an S3-compatible one.

@@ -1,5 +1,6 @@
 import type { GlobalConfig } from "payload";
 
+import { validateTagId } from "../../lib/analytics/tag-id";
 import { CACHE_TAGS } from "../../lib/cache-tags";
 import { isEditor } from "../access/roles";
 import { linkField } from "../fields/link";
@@ -65,6 +66,20 @@ export const SiteSettings: GlobalConfig = {
         description: {
           cs: "Použije se při sdílení stránky, která nemá vlastní obrázek.",
           en: "Used when a shared page has no image of its own.",
+        },
+      },
+    },
+    {
+      name: "analyticsTagId",
+      label: { cs: "Google Tag Manager nebo GA4", en: "Google Tag Manager or GA4" },
+      type: "text",
+      validate: validateTagId,
+      admin: {
+        position: "sidebar",
+        placeholder: "GTM-XXXXXXX",
+        description: {
+          cs: "ID kontejneru (GTM-…) nebo měřicí ID (G-…). Načte se jen na produkci a jen po souhlasu návštěvníka. Prázdné pole analytiku vypne.",
+          en: "Container ID (GTM-…) or measurement ID (G-…). Loads only on production and only after the visitor consents. Leave empty to switch analytics off.",
         },
       },
     },

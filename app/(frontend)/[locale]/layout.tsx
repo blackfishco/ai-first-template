@@ -11,9 +11,11 @@ import { AppProviders } from "@/app/providers";
 import { LivePreviewRefresh } from "@/components/cms/live-preview-refresh";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { Analytics } from "@/features/analytics/components/analytics";
 import { ConsentManager } from "@/features/consent/components/consent-manager";
 import { ConsentSettingsLink } from "@/features/consent/components/consent-settings-link";
 import { isLocale, LOCALES } from "@/i18n/config";
+import { isAnalyticsEnabled, tagKind } from "@/lib/analytics/tag-id";
 import { env } from "@/lib/env";
 import { getSiteSettings } from "@/lib/site-settings/server";
 import { cn } from "@/lib/utils";
@@ -59,6 +61,9 @@ export default async function RootLayout({
   );
   const siteName = settings.siteName ?? t("name");
   const { isEnabled: isDraft } = await draftMode();
+  const analyticsKind = isAnalyticsEnabled(env)
+    ? tagKind(settings.analyticsTagId)
+    : null;
 
   return (
     <html
@@ -88,6 +93,9 @@ export default async function RootLayout({
               <ConsentSettingsLink />
             </SiteFooter>
             <ConsentManager />
+            {analyticsKind && settings.analyticsTagId ? (
+              <Analytics tagId={settings.analyticsTagId} kind={analyticsKind} />
+            ) : null}
           </AppProviders>
         </NextIntlClientProvider>
       </body>
