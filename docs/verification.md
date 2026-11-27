@@ -25,6 +25,18 @@ For UI, routing, form, focus, or shared styling changes, run `pnpm start` after 
 
 Stop the server after verification. Report commands, results, manual checks, and every unrun check with its reason. Lint, types, tests, and a build do not prove visual correctness. Do not weaken checks to pass.
 
+## Performance (Lighthouse)
+
+The CI job "Lighthouse" builds the seeded site and measures `/` and `/kontakt` three times each on a simulated phone. The job summary shows the scores; the full reports are in the job's artifacts. Budgets live in [`lighthouserc.json`](../lighthouserc.json): performance and best practices 90, accessibility 95, SEO 90.
+
+The budgets only warn for now. CI machines vary, so a single run can drop a few points without a real change. Make them blocking (change `"warn"` to `"error"` in `lighthouserc.json`) once a project has its real design and content and the scores stay above the budget for a couple of weeks.
+
+Locally, after `pnpm build` with `SITE_URL=http://127.0.0.1:3100 ALLOW_INDEXING=true` (otherwise SEO counts the non-production noindex and canonical host):
+
+```sh
+CHROME_PATH=/path/to/chromium SITE_URL=http://127.0.0.1:3100 ALLOW_INDEXING=true pnpm lighthouse
+```
+
 ## GitHub activation (pending)
 
 The workflow is delivered; host-side protection is a separate setup task. It is **not active merely because `ci.yml` exists**.

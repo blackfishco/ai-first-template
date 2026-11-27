@@ -29,6 +29,7 @@
 
 # test output
 /test-results/
+/.lighthouseci/
 /playwright-report/
 /coverage/
 

@@ -117,3 +117,63 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: End-to-end tests with the policy
         run: pnpm test:e2e
+
+  lighthouse:
+    name: Lighthouse
+    # Measures the seeded site; budgets warn and never fail the job.
+    # See docs/verification.md for when to make them blocking.
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
+      DATABASE_URL: postgres://template:template@127.0.0.1:5432/template_test
+      PAYLOAD_SECRET: ci-only-secret-not-used-anywhere-else-0000
+      # Measured as the production site would be: indexable, canonical
+      # addresses on the measured host.
+      SITE_URL: http://127.0.0.1:3100
+      ALLOW_INDEXING: "true"
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: template
+          POSTGRES_PASSWORD: template
+          POSTGRES_DB: template_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U template -d template_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.23.0
+          run_install: false
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Migrations and seed
+        run: |
+          pnpm payload migrate
+          ALLOW_SEED=true pnpm seed
+      - name: Production build
+        run: pnpm build
+      - name: Install Chromium
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          echo "CHROME_PATH=$(node -e "console.log(require('@playwright/test').chromium.executablePath())")" >> "$GITHUB_ENV"
+      - name: Measure
+        run: pnpm lighthouse
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/reports
+          if-no-files-found: ignore

@@ -32,6 +32,7 @@ In development the CMS creates and updates the database schema by itself on star
 | `pnpm test:int` | Migrations and integration tests against a `*_test` Postgres database |
 | `pnpm build` | Production build |
 | `pnpm test:e2e` | End-to-end tests (Playwright) against the production build |
+| `pnpm lighthouse` | Lighthouse scores of the home and contact pages against the production build |
 | `pnpm vercel-build` | Deployment build: migrate when allowed, then build |
 | `pnpm start` | Serve an existing production build |
 | `pnpm payload migrate` | Apply committed migrations (deployments and test databases, not development) |
