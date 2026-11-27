@@ -51,6 +51,12 @@ export const serverEnvSchema = z.object({
   EMAIL_FROM_NAME: z.string().min(1).optional(),
   // Where contact form messages are sent. Without it they are only stored.
   CONTACT_EMAIL_TO: z.email().optional(),
+  // Analytics loads on the production deployment only (lib/analytics).
+  // `true` or `false` overrides that rule; the end-to-end tests set `true`.
+  ANALYTICS_ENABLED: z
+    .enum(["true", "false"])
+    .optional()
+    .transform((value) => (value === undefined ? undefined : value === "true")),
   // Vercel Blob read-write token. Without it uploads stay on local disk.
   BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
 });

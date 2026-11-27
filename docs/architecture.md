@@ -84,6 +84,16 @@ Payload runs inside the same Next.js app. The site lives in the `app/(frontend)`
 - **The texts are placeholders,** marked as such in `messages/*.json`. The legal wording comes from the project before launch.
 - **End-to-end tests** start with the banner already answered (rejected), set in `playwright.config.ts`; `e2e/consent.spec.ts` starts as a first-time visitor.
 
+## Analytics
+
+[`features/analytics`](../features/analytics/) loads one Google tag: a Tag Manager container (`GTM-…`) or a GA4 measurement ID (`G-…`). An editor sets it in the CMS site settings; an empty field switches analytics off.
+
+- **Loads only with consent.** Nothing from Google loads until the visitor consents to analytics. Then the tag starts with Consent Mode v2 (everything denied by default, then updated from the choice); the marketing category controls the ad signals. Withdrawing consent reloads the page, so no tag code keeps running.
+- **Production only.** [`isAnalyticsEnabled()`](../lib/analytics/tag-id.ts) follows the indexing rule: the Vercel production deployment, or `ALLOW_INDEXING=true` elsewhere. `ANALYTICS_ENABLED` overrides it; only the end-to-end tests set it.
+- **Page views, including client-side navigation.** GA4 gets a `page_view` event on every route change (its own automatic page view is off). A Tag Manager container gets a `page_view` data layer event: trigger the GA4 tag on that custom event, not on "All Pages", or the first page counts twice.
+- **Content Security Policy.** When a project turns on a policy, allow `https://www.googletagmanager.com` for scripts and `https://*.google-analytics.com` and `https://*.analytics.google.com` for connections.
+- **End-to-end tests** answer Google's requests locally; nothing leaves the test.
+
 ## Deployment
 
 [Environments](environments.md) lists what each environment uses and how to set up Vercel or another host. [Migrations](migrations.md) has the rules for schema changes.

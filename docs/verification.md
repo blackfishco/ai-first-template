@@ -20,6 +20,7 @@ For UI, routing, form, focus, or shared styling changes, run `pnpm start` after 
 - `/` and `/en` after a seed: the home page, header navigation, and the language switcher.
 - A page with the contact form block: errors at each field, a failed send keeping what was typed, and the confirmation after a successful send.
 - The cookie banner in a private window: it appears once, all three choices work, the footer link reopens the settings with the saved choice, and the banner covers no content you need on a phone.
+- Analytics, with a real tag ID on a production-like deployment: no request to `googletagmanager.com` before consent; after "Přijmout vše" GA4 DebugView shows page views, including after clicking a link; after switching analytics off in the footer settings no more requests.
 - Shared UI: desktop and mobile layouts, keyboard navigation, focus handling, accessible names, dialogs, calendar, and toast feedback.
 
 Stop the server after verification. Report commands, results, manual checks, and every unrun check with its reason. Lint, types, tests, and a build do not prove visual correctness. Do not weaken checks to pass.

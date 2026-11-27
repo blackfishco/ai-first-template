@@ -16,6 +16,8 @@ export interface SiteSettingsView {
   headerNav: CmsLinkField[];
   footerNav: CmsLinkField[];
   defaultShareImage: Media | null;
+  /** Google tag ID (GTM-… or G-…), or `null` when analytics is off. */
+  analyticsTagId: string | null;
 }
 
 export type SiteSettingsError = { code: "CMS_UNAVAILABLE" };
@@ -39,6 +41,7 @@ async function findSiteSettings(locale: Locale): Promise<SiteSettingsView> {
       typeof settings.defaultShareImage === "object"
         ? settings.defaultShareImage
         : null,
+    analyticsTagId: settings.analyticsTagId ?? null,
   };
 }
 
