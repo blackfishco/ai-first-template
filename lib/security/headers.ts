@@ -7,9 +7,8 @@ export interface Header {
  * Headers for every response. HSTS only from a production build: `next dev`
  * on http://localhost must not pin anything.
  *
- * There is no Content Security Policy here. A useful one needs a per-request
- * nonce, which forces every page to render dynamically; add it per project
- * when the trade is worth it. See docs/decisions.md.
+ * The Content Security Policy is not here: it needs a per-request nonce, so
+ * the proxy sets it when `CSP_MODE` turns it on (lib/security/csp.ts).
  */
 export function securityHeaders({
   productionBuild,

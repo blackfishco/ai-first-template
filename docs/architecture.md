@@ -94,6 +94,15 @@ Payload runs inside the same Next.js app. The site lives in the `app/(frontend)`
 - **Content Security Policy.** When a project turns on a policy, allow `https://www.googletagmanager.com` for scripts and `https://*.google-analytics.com` and `https://*.analytics.google.com` for connections.
 - **End-to-end tests** answer Google's requests locally; nothing leaves the test.
 
+## Content Security Policy
+
+Off by default. `CSP_MODE=report-only` or `CSP_MODE=enforce` turns it on for the site; the CMS admin stays outside it.
+
+- **What it costs.** The policy carries a nonce that is new for every request, so every page renders per request instead of being served from the static cache. Expect more function invocations and slower first bytes. The layout calls `connection()` when the policy is on; the catch-all page route prerenders one probe address at build so Next.js marks it as rendered per request (a route that prerenders nothing cannot switch later).
+- **How it works.** [`proxy.ts`](../proxy.ts) builds the policy with [`buildCsp()`](../lib/security/csp.ts) and sets it on the request and the response. Next.js reads the nonce from the request and adds it to its scripts. `'strict-dynamic'` lets those scripts load others, such as the Google tag.
+- **Adding a third party.** Add its hosts to `CSP_SOURCES` in [`lib/security/csp.ts`](../lib/security/csp.ts). Scripts need no host entry; images, connections, and frames do.
+- **Turning it on.** Deploy with `report-only` first and watch the browser console for reports, then switch to `enforce`. CI runs the whole end-to-end suite once with `enforce`.
+
 ## Deployment
 
 [Environments](environments.md) lists what each environment uses and how to set up Vercel or another host. [Migrations](migrations.md) has the rules for schema changes.

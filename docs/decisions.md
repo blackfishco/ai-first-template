@@ -2,6 +2,18 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-27 — The Content Security Policy is optional and off by default (BF-998)
+
+**What.** `CSP_MODE` (`off`, `report-only`, `enforce`) switches a nonce-based policy for the site. Off by default. The CMS admin is outside it. This supersedes "No Content Security Policy in the template".
+
+**Why.** The original reason still holds: a nonce forces every page to render per request, which gives up the static cache. Projects that need a policy (a client's security audit, a strict DPO) should not have to write it from scratch, though, and the template's own pages, analytics, and live preview must keep working under it, which only a tested policy proves. Hence: off by default, one variable to turn on, report-only first, and a CI job that runs the whole end-to-end suite under `enforce`.
+
+- *Admin outside the policy:* Payload's admin injects inline scripts and styles we do not control; a policy there breaks with any Payload update.
+- *`style-src 'unsafe-inline'`:* inline style attributes from components and rich text cannot carry a nonce. Script injection is the risk a policy addresses; styles are not.
+- *Probe address in `generateStaticParams`:* a route that prerenders nothing at build stays an on-demand static route and fails with `DYNAMIC_SERVER_USAGE` when it reads the request later. Prerendering one address that reads the request makes Next.js mark the route dynamic at build.
+
+**Where.** `lib/security/csp.ts`, `proxy.ts`, `app/(frontend)/[locale]/layout.tsx`, `app/(frontend)/[locale]/[...slug]/page.tsx`, `.github/workflows/ci.yml`.
+
 ## 2026-11-27 — Analytics loads only after consent and only on production (BF-1001)
 
 **What.** One Google tag ID in the CMS site settings, `GTM-…` or `G-…`. The script loads after the visitor consents to analytics, with Consent Mode v2 set before it. Withdrawing consent reloads the page. Page views are sent by the site on every route change. The tag runs on production only.

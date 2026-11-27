@@ -69,3 +69,51 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: End-to-end tests
         run: pnpm test:e2e
+
+  csp:
+    name: End-to-end tests with a Content Security Policy
+    # The same suite with CSP_MODE=enforce: pages render per request with a
+    # nonce, and nothing on the site or in the admin may break under the policy.
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
+      CSP_MODE: enforce
+      DATABASE_URL: postgres://template:template@127.0.0.1:5432/template_test
+      PAYLOAD_SECRET: ci-only-secret-not-used-anywhere-else-0000
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: template
+          POSTGRES_PASSWORD: template
+          POSTGRES_DB: template_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U template -d template_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.23.0
+          run_install: false
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Migrations and seed
+        run: |
+          pnpm payload migrate
+          ALLOW_SEED=true pnpm seed
+      - name: Production build with the policy
+        run: pnpm build
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+      - name: End-to-end tests with the policy
+        run: pnpm test:e2e
