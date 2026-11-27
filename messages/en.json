@@ -43,5 +43,24 @@
     "notFoundTitle": "Page not found",
     "notFoundDescription": "Nothing lives at this address. The page may have moved.",
     "backHome": "Back to home"
+  },
+  "Consent": {
+    "bannerLabel": "Cookie consent",
+    "title": "Cookies on this site",
+    "description": "PLACEHOLDER TEXT – replace with the legal wording before launch. The site needs necessary cookies to work. We use analytics and marketing cookies only with your consent.",
+    "choiceHint": "Choose whether you accept all cookies, reject all but the necessary ones, or want to set each category.",
+    "acceptAll": "Accept all",
+    "rejectAll": "Reject all",
+    "customize": "Customize",
+    "settingsTitle": "Cookie settings",
+    "settingsDescription": "PLACEHOLDER TEXT – replace with the legal wording before launch. You can change your choice at any time with the link in the footer.",
+    "save": "Save settings",
+    "necessary": "Necessary",
+    "necessaryDescription": "They keep the site working, for example your language or this choice. They cannot be switched off.",
+    "analytics": "Analytics",
+    "analyticsDescription": "They help us understand how you use the site.",
+    "marketing": "Marketing",
+    "marketingDescription": "They measure and target advertising.",
+    "openSettings": "Cookie settings"
   }
 }

@@ -21,6 +21,23 @@ export default defineConfig({
     trace: "off",
     // The site redirects by browser language; tests start in the default one.
     locale: "cs-CZ",
+    // Visitors in tests have already answered the cookie banner (rejected
+    // all), so it does not cover the page. e2e/consent.spec.ts starts clean.
+    storageState: {
+      cookies: [
+        {
+          name: "consent",
+          value: "1.00",
+          domain: "127.0.0.1",
+          path: "/",
+          expires: -1,
+          httpOnly: false,
+          secure: false,
+          sameSite: "Lax",
+        },
+      ],
+      origins: [],
+    },
   },
   projects: [
     {

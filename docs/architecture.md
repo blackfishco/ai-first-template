@@ -74,6 +74,16 @@ Payload runs inside the same Next.js app. The site lives in the `app/(frontend)`
 - **Add a language:** add it to `LOCALES` and `LOCALE_LABELS`, add `messages/<locale>.json`, register it in `i18n/messages.ts`, then run `pnpm payload migrate:create add-<locale>` and `pnpm generate:types`. Typecheck and `i18n/config.test.ts` point at anything missed.
 - **Use one language only:** reduce `LOCALES` to it, delete the other message files and their imports, remove the `LocaleSwitcher`, and create a migration. Keep the `[locale]` segment; it costs nothing and keeps a second language cheap to add later.
 
+## Cookie consent
+
+[`features/consent`](../features/consent/) asks for consent on the first visit: accept all, reject all, or choose categories (necessary, analytics, marketing). The footer link reopens the settings at any time.
+
+- **The contract is shared, the UI is a feature.** [`lib/consent/consent.ts`](../lib/consent/consent.ts) defines the categories and the stored format; [`lib/consent/client.ts`](../lib/consent/client.ts) gives `useConsent()`, `saveConsent()`, and `openConsentSettings()`. A feature that needs consent, such as analytics, reads it there and never imports `features/consent`.
+- **Stored in one cookie,** `consent`, with a version: `1.10` means version 1, analytics on, marketing off. Raise `CONSENT_VERSION` when the categories or what they cover change; every visitor is then asked again. The cookie is necessary and is kept for six months.
+- **Pages stay static.** The server never reads the cookie. `useConsent()` reports `unknown` until the page hydrates, so nothing that depends on consent renders on the server. The banner floats over the page and moves no content.
+- **The texts are placeholders,** marked as such in `messages/*.json`. The legal wording comes from the project before launch.
+- **End-to-end tests** start with the banner already answered (rejected), set in `playwright.config.ts`; `e2e/consent.spec.ts` starts as a first-time visitor.
+
 ## Deployment
 
 [Environments](environments.md) lists what each environment uses and how to set up Vercel or another host. [Migrations](migrations.md) has the rules for schema changes.
