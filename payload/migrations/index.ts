@@ -8,6 +8,7 @@ import * as migration_20261124_121404_seo from './20261124_121404_seo';
 import * as migration_20261124_122116_redirects from './20261124_122116_redirects';
 import * as migration_20261124_122851_contact from './20261124_122851_contact';
 import * as migration_20261124_123504_seed_key from './20261124_123504_seed_key';
+import * as migration_20261127_132105_rate_limit_hits from './20261127_132105_rate_limit_hits';
 
 export const migrations = [
   {
@@ -58,6 +59,11 @@ export const migrations = [
   {
     up: migration_20261124_123504_seed_key.up,
     down: migration_20261124_123504_seed_key.down,
-    name: '20261124_123504_seed_key'
+    name: '20261124_123504_seed_key',
+  },
+  {
+    up: migration_20261127_132105_rate_limit_hits.up,
+    down: migration_20261127_132105_rate_limit_hits.down,
+    name: '20261127_132105_rate_limit_hits'
   },
 ];

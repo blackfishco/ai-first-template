@@ -21,10 +21,12 @@ The contact form is the reference for a form that writes data. Start at [`featur
 1. [`schema.ts`](../features/contact/schema.ts) defines the fields once. Validation messages are error codes, not text. `parseContactInput` returns a `Result` and never echoes submitted values.
 2. The form uses React Hook Form with the same schema, so most mistakes are caught before a request. It translates error codes with next-intl.
 3. [`submitContactAction`](../features/contact/actions.ts) treats its arguments as untrusted and validates them again on the server. It receives the language as an argument, because a Server Action runs outside a route and cannot read the `[locale]` segment.
-4. [`submitContactMessage`](../features/contact/server/submit-message.ts) returns a `ResultAsync`. It stores the message first and then notifies the owner; a failed notification is logged and does not fail the submission.
-5. The action converts the result to a plain union with safe codes. The form branches on it: field errors next to fields, an alert when the server cannot be reached, and a confirmation on success.
+4. [`submitContactMessage`](../features/contact/server/submit-message.ts) returns a `ResultAsync`. It checks the rate limit, stores the message, and then notifies the owner; a failed notification is logged and does not fail the submission.
+5. The action converts the result to a plain union with safe codes. The form branches on it: field errors next to fields, an alert when the server cannot be reached or the visitor is over the limit, and a confirmation on success.
 
 The message is written with `overrideAccess: true` because an anonymous visitor has no CMS account. That is safe only because the collection is closed to the public API and the input was validated one line earlier; say why whenever you bypass access control.
+
+**Rate limit.** A visitor may send five messages in ten minutes ([`CONTACT_RATE_LIMIT`](../features/contact/server/submit-message.ts)). [`lib/rate-limit`](../lib/rate-limit/) stores accepted requests in the `rate-limit-hits` collection, so the limit holds across server instances. The client is identified by its IP address from the request headers, stored only as an HMAC keyed with `PAYLOAD_SECRET`. Any Server Action that writes data or sends e-mail on behalf of an anonymous visitor uses the same module with its own scope and rule.
 
 The form's block shows how a page block uses a feature: [`components/sections/contact-form.tsx`](../components/sections/contact-form.tsx) renders a slot, and the route passes `<ContactForm />` into it, because shared components do not import features.
 

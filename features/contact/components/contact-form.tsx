@@ -31,7 +31,7 @@ import {
   MESSAGE_MIN_LENGTH,
 } from "../schema";
 
-type Status = "idle" | "sent" | "unavailable";
+type Status = "idle" | "sent" | "unavailable" | "limited";
 
 const EMPTY: ContactFormValues = { name: "", email: "", message: "", website: "" };
 
@@ -75,7 +75,7 @@ export function ContactForm() {
       }
       return;
     }
-    setStatus("unavailable");
+    setStatus(result.code === "TOO_MANY_REQUESTS" ? "limited" : "unavailable");
   });
 
   const errorText = (message: string | undefined) => {
@@ -159,6 +159,12 @@ export function ContactForm() {
             <Alert variant="destructive">
               <AlertTitle>{t("errorTitle")}</AlertTitle>
               <AlertDescription>{t("errors.UNAVAILABLE")}</AlertDescription>
+            </Alert>
+          ) : null}
+          {status === "limited" ? (
+            <Alert variant="destructive">
+              <AlertTitle>{t("errorTitle")}</AlertTitle>
+              <AlertDescription>{t("errors.TOO_MANY_REQUESTS")}</AlertDescription>
             </Alert>
           ) : null}
         </div>

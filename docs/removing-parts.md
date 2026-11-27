@@ -31,7 +31,7 @@ Fields stay `localized: true`. That keeps the schema ready for a second language
 8. **Fix the generated migration before running it.** It drops the `contact_messages` table with `CASCADE` and then drops a constraint that went with the table, so it fails with `constraint "payload_locked_documents_rels_contact_messages_fk" … does not exist`. Change that line to `DROP CONSTRAINT IF EXISTS`. `pnpm test:int` applies the migration to the test database and shows whether it runs.
 9. `docs/architecture.md` and `AGENTS.md` name the contact form as the reference for a form. Point them at another form, or keep the section as a description of the pattern.
 
-`lib/stale-deployment.ts` stays: any Server Action call can use it. To drop the form libraries too, remove `react-hook-form`, `@hookform/resolvers`, and the `react-hook-form` skill once no form uses them, and `@react-email/components` once no e-mail template uses it.
+`lib/stale-deployment.ts` stays: any Server Action call can use it. So does `lib/rate-limit` with its `rate-limit-hits` collection; if nothing else uses it, delete both, remove the collection from `payload.config.ts`, and include it in the same migration. To drop the form libraries too, remove `react-hook-form`, `@hookform/resolvers`, and the `react-hook-form` skill once no form uses them, and `@react-email/components` once no e-mail template uses it.
 
 ## TanStack Query
 

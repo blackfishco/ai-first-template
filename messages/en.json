@@ -32,7 +32,8 @@
       "TOO_SHORT": "The message is too short.",
       "TOO_LONG": "The text is too long.",
       "INVALID_EMAIL": "Enter a valid e-mail address.",
-      "UNAVAILABLE": "The server could not be reached. Please try again; what you wrote is still in the form."
+      "UNAVAILABLE": "The server could not be reached. Please try again; what you wrote is still in the form.",
+      "TOO_MANY_REQUESTS": "You sent several messages in a short time. Please try again in a few minutes."
     }
   },
   "Errors": {

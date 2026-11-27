@@ -8,4 +8,4 @@ export type ContactResult =
       code: "INVALID_INPUT";
       fields: Partial<Record<ContactField, FieldErrorCode>>;
     }
-  | { success: false; code: "UNAVAILABLE" };
+  | { success: false; code: "UNAVAILABLE" | "TOO_MANY_REQUESTS" };

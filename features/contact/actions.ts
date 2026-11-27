@@ -1,6 +1,9 @@
 "use server";
 
+import { headers } from "next/headers";
+
 import { DEFAULT_LOCALE, isLocale } from "@/i18n/config";
+import { clientIp } from "@/lib/rate-limit/client";
 
 import { parseContactInput } from "./schema";
 import { submitContactMessage } from "./server/submit-message";
@@ -28,6 +31,7 @@ export async function submitContactAction(
   return submitContactMessage(
     parsed.value,
     isLocale(locale) ? locale : DEFAULT_LOCALE,
+    clientIp(await headers()),
   ).match<ContactResult>(
     () => ({ success: true }),
     (error) => ({ success: false, code: error.code }),
