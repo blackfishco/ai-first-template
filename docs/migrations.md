@@ -21,7 +21,7 @@ The CMS schema is code. Every change to a collection, global, block, field, loca
 ## Rules
 
 - **Never enable `push` outside development.** It changes the schema without a record and has drifted production databases in earlier projects.
-- **Migrations go forward only.** Do not edit a migration that has been merged; write a new one.
+- **Migrations go forward only.** Do not edit the `up` of a migration that has been merged; write a new one. The `down` of a merged migration may be fixed when it cannot run, because a `down` changes no database until someone rolls back. CI rolls every migration down and up again, so a broken `down` fails the check.
 - **A migration must work with the previous version of the code.** A deploy is not atomic: the old version serves traffic while the migration runs, and a rollback of the code does not roll back the database. So:
   - add a column as nullable or with a default, and make it required in a later release;
   - remove a column only in a release after the code stopped using it;
@@ -45,5 +45,5 @@ The CMS schema is code. Every change to a collection, global, block, field, loca
 - **A migration failed half-way.** Each migration runs in a transaction, so the schema is as it was. Fix the migration (if it has not been merged) or add a corrected one, and deploy again.
 - **`migrate` asks whether to proceed because "data loss will occur".** You ran it on a development database, which the CMS syncs by itself. Answer no. A development database does not need migrations; if you want one built from migrations only, recreate it and run `NODE_ENV=production pnpm payload migrate` before starting anything in development mode.
 - **A migration fails on a test database with a table that already exists.** Something ran in development mode against it. Recreate the test database.
-- **Removing a collection fails with `constraint … does not exist`.** The generated SQL drops the table with `CASCADE` and then drops a foreign key on `payload_locked_documents_rels` that went with it. Change that line to `DROP CONSTRAINT IF EXISTS`. The same SQL sits in the `down` function of every migration that **adds** a collection, so fix it there too before committing. `pnpm test:int` shows whether `up` applies; check `down` with `NODE_ENV=production pnpm payload migrate:down` on the test database.
+- **Removing a collection fails with `constraint … does not exist`.** The generated SQL drops the table with `CASCADE` and then drops a foreign key on `payload_locked_documents_rels` that went with it. Change that line to `DROP CONSTRAINT IF EXISTS`. The same SQL sits in the `down` function of every migration that **adds** a collection, so fix it there too before committing (`DROP CONSTRAINT IF EXISTS`, `DROP INDEX IF EXISTS`). `pnpm test:int` shows whether `up` applies; CI also rolls everything down and up, or run `NODE_ENV=production pnpm payload migrate:down` on the test database yourself.
 - **The types are stale.** Run `pnpm generate:types` and commit the result.

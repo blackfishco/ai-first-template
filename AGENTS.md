@@ -81,7 +81,7 @@ Payload runs in this app. Read the `payload` skill and the Payload section of [d
 
 - **The Local API skips access control by default.** Anything served to a visitor passes `overrideAccess: false`. When you bypass access on purpose, say why in a comment next to the call.
 - **Every content read passes the language**: `locale` from `getContentLocale()` and `fallbackLocale`.
-- **A schema change ships with its migration and regenerated `payload-types.ts`** in the same change; see [docs/migrations.md](docs/migrations.md). Never enable `push` outside development. Never edit a merged migration or anything in `app/(payload)`.
+- **A schema change ships with its migration and regenerated `payload-types.ts`** in the same change; see [docs/migrations.md](docs/migrations.md). Never enable `push` outside development. Never edit the `up` of a merged migration or anything in `app/(payload)`.
 - **A Server Action runs outside a route** and cannot read the `[locale]` segment. Pass the language from the client as an argument and validate it with `isLocale`.
 - **Content written by a script is not revalidated.** Pass `context: { disableRevalidate: true }` and clear the cache afterwards, as `scripts/seed.ts` does.
 - Site visitors are not CMS accounts. Do not add visitor roles to `users`; add a separate auth collection and a feature.

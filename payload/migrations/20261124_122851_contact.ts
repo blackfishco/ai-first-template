@@ -78,8 +78,8 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "_pages_v_blocks_contact_form" CASCADE;
   DROP TABLE "_pages_v_blocks_contact_form_locales" CASCADE;
   DROP TABLE "contact_messages" CASCADE;
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_contact_messages_fk";
+  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT IF EXISTS "payload_locked_documents_rels_contact_messages_fk";
   
-  DROP INDEX "payload_locked_documents_rels_contact_messages_id_idx";
+  DROP INDEX IF EXISTS "payload_locked_documents_rels_contact_messages_id_idx";
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "contact_messages_id";`)
 }
