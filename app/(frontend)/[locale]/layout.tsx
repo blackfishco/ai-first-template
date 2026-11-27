@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
@@ -50,6 +51,9 @@ export default async function RootLayout({
   if (!isLocale(locale)) {
     notFound();
   }
+
+  // A nonce is per request, so with a policy on, every page renders per request.
+  if (env.CSP_MODE !== "off") await connection();
 
   const t = await getTranslations({ locale, namespace: "Site" });
   const settings = await getSiteSettings(locale).match(

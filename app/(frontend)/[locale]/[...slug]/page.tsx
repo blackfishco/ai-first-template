@@ -4,14 +4,20 @@ import { notFound } from "next/navigation";
 import { ContactForm } from "@/features/contact/components/contact-form";
 import { CmsPage } from "@/features/pages/components/cms-page";
 import { getPageMetadata } from "@/features/pages/server/get-page-metadata";
+import { env } from "@/lib/env";
 import { HOME_SLUG, slugProblem } from "@/lib/slug";
 
 /**
  * Pages are rendered on first request and then served from the cache until an
  * editor changes them, so a build needs no content.
+ *
+ * With a Content Security Policy on, every page renders per request instead.
+ * A route that prerenders nothing at build cannot switch to that later, so the
+ * build then renders one probe address: the layout reads the request, and
+ * Next.js marks the whole route as rendered per request. The probe is a 404.
  */
 export function generateStaticParams() {
-  return [];
+  return env.CSP_MODE === "off" ? [] : [{ slug: ["csp-render-per-request"] }];
 }
 
 export async function generateMetadata({

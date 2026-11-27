@@ -57,6 +57,9 @@ export const serverEnvSchema = z.object({
     .enum(["true", "false"])
     .optional()
     .transform((value) => (value === undefined ? undefined : value === "true")),
+  // Content Security Policy for the site (lib/security/csp.ts). `off` keeps
+  // pages static; `report-only` and `enforce` render every page per request.
+  CSP_MODE: z.enum(["off", "report-only", "enforce"]).default("off"),
   // Vercel Blob read-write token. Without it uploads stay on local disk.
   BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
 });
