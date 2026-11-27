@@ -32,7 +32,8 @@
       "TOO_SHORT": "Zpráva je příliš krátká.",
       "TOO_LONG": "Text je příliš dlouhý.",
       "INVALID_EMAIL": "Zadejte platnou e-mailovou adresu.",
-      "UNAVAILABLE": "Server se nepodařilo zastihnout. Zkuste to prosím znovu; to, co jste napsali, zůstalo ve formuláři."
+      "UNAVAILABLE": "Server se nepodařilo zastihnout. Zkuste to prosím znovu; to, co jste napsali, zůstalo ve formuláři.",
+      "TOO_MANY_REQUESTS": "Odeslali jste několik zpráv krátce po sobě. Zkuste to prosím znovu za pár minut."
     }
   },
   "Errors": {

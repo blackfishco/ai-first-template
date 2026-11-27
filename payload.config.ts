@@ -17,6 +17,7 @@ import { ADMIN_TITLE_SUFFIX } from "./payload/admin/branding";
 import { ContactMessages } from "./payload/collections/contact-messages";
 import { Media } from "./payload/collections/media";
 import { Pages } from "./payload/collections/pages";
+import { RateLimitHits } from "./payload/collections/rate-limit-hits";
 import { Users } from "./payload/collections/users";
 import { SiteSettings } from "./payload/globals/site-settings";
 import { redirects } from "./payload/plugins/redirects";
@@ -65,7 +66,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Pages, Media, ContactMessages, Users],
+  collections: [Pages, Media, ContactMessages, Users, RateLimitHits],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   // E-mail through Resend when both variables are set. Without them Payload

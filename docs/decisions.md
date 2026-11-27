@@ -2,6 +2,16 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-27 — Rate limits live in Postgres (BF-995)
+
+**What.** `lib/rate-limit` counts accepted requests per client in the `rate-limit-hits` collection. The contact form allows five messages per visitor in ten minutes. The client is the first `x-forwarded-for` address, stored only as an HMAC keyed with `PAYLOAD_SECRET`.
+
+**Why.** On Vercel every request can land on another instance, so a limit in process memory does nothing. A hosted store (Upstash, Vercel KV) would be faster but adds a service, a key, and a cost to every project. The database is already there, and a form that writes a row per message can afford one more read and write. Two requests at the same instant can both take the last slot; for a form that is acceptable. A request without an address (local scripts, tests) is not limited.
+
+**Where.** `lib/rate-limit/`, `payload/collections/rate-limit-hits.ts`, `features/contact/server/submit-message.ts`, `features/contact/actions.ts`.
+
+**Revisit when.** A project needs limits on hot paths (login, search, API), where a database round trip per request matters. Move the store behind the same `consumeRateLimit` signature.
+
 ## 2026-11-24 — `pnpm test:int` checks the database name before it migrates (BF-987)
 
 **What.** `pnpm test:int` first runs `scripts/check-test-database.ts`, which stops unless `DATABASE_URL` names a database ending in `_test`. The same check stays in the Vitest setup.

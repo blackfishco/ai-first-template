@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     'contact-messages': ContactMessage;
     users: User;
+    'rate-limit-hits': RateLimitHit;
     redirects: Redirect;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
@@ -84,6 +85,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'rate-limit-hits': RateLimitHitsSelect<false> | RateLimitHitsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -341,6 +343,17 @@ export interface User {
   collection: 'users';
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rate-limit-hits".
+ */
+export interface RateLimitHit {
+  id: number;
+  scope: string;
+  key: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * An old address leads to a new page. Renaming a published page creates the redirect automatically.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -492,6 +505,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'rate-limit-hits';
+        value: number | RateLimitHit;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -712,6 +729,16 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rate-limit-hits_select".
+ */
+export interface RateLimitHitsSelect<T extends boolean = true> {
+  scope?: T;
+  key?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
