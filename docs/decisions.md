@@ -2,6 +2,14 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-27 — A merged migration's `down` may be fixed (BF-1004)
+
+**What.** The `down` functions of four merged migrations (`media`, `pages`, `redirects`, `contact`) now use `DROP CONSTRAINT IF EXISTS` and `DROP INDEX IF EXISTS`. The rule "never edit a merged migration" now covers `up` only. CI rolls every migration back and applies it again.
+
+**Why.** Payload generates a `down` that drops a table with `CASCADE` and then drops a foreign key that went with it, so rolling back failed with `constraint … does not exist`. Payload records migrations by name, not by content, and a `down` changes no database until someone rolls back, so fixing it cannot make environments diverge. The fix was made while no project had deployed the template yet. The CI step keeps new migrations from repeating the mistake.
+
+**Where.** `payload/migrations/`, `docs/migrations.md`, `AGENTS.md`, `.github/workflows/ci.yml`.
+
 ## 2026-11-27 — The Content Security Policy is optional and off by default (BF-998)
 
 **What.** `CSP_MODE` (`off`, `report-only`, `enforce`) switches a nonce-based policy for the site. Off by default. The CMS admin is outside it. This supersedes "No Content Security Policy in the template".

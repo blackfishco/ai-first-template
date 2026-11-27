@@ -65,8 +65,8 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   ALTER TABLE "media_locales" DISABLE ROW LEVEL SECURITY;
   DROP TABLE "media" CASCADE;
   DROP TABLE "media_locales" CASCADE;
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_media_fk";
+  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT IF EXISTS "payload_locked_documents_rels_media_fk";
   
-  DROP INDEX "payload_locked_documents_rels_media_id_idx";
+  DROP INDEX IF EXISTS "payload_locked_documents_rels_media_id_idx";
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "media_id";`)
 }
