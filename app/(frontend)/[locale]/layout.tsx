@@ -11,6 +11,8 @@ import { AppProviders } from "@/app/providers";
 import { LivePreviewRefresh } from "@/components/cms/live-preview-refresh";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { ConsentManager } from "@/features/consent/components/consent-manager";
+import { ConsentSettingsLink } from "@/features/consent/components/consent-settings-link";
 import { isLocale, LOCALES } from "@/i18n/config";
 import { env } from "@/lib/env";
 import { getSiteSettings } from "@/lib/site-settings/server";
@@ -82,7 +84,10 @@ export default async function RootLayout({
               siteName={siteName}
               navigation={settings.footerNav}
               navigationLabel={t("footerNavigation")}
-            />
+            >
+              <ConsentSettingsLink />
+            </SiteFooter>
+            <ConsentManager />
           </AppProviders>
         </NextIntlClientProvider>
       </body>

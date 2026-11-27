@@ -43,5 +43,24 @@
     "notFoundTitle": "Stránka nenalezena",
     "notFoundDescription": "Na této adrese nic není. Možná se stránka přesunula.",
     "backHome": "Zpět na úvod"
+  },
+  "Consent": {
+    "bannerLabel": "Souhlas s cookies",
+    "title": "Cookies na tomto webu",
+    "description": "ZÁSTUPNÝ TEXT – před spuštěním webu nahraďte právním zněním. Nutné cookies web potřebuje, aby fungoval. Analytické a marketingové použijeme jen s vaším souhlasem.",
+    "choiceHint": "Vyberte, zda souhlasíte se všemi cookies, odmítáte všechny kromě nutných, nebo chcete nastavit jednotlivé kategorie.",
+    "acceptAll": "Přijmout vše",
+    "rejectAll": "Odmítnout vše",
+    "customize": "Nastavit",
+    "settingsTitle": "Nastavení cookies",
+    "settingsDescription": "ZÁSTUPNÝ TEXT – před spuštěním webu nahraďte právním zněním. Svou volbu můžete kdykoli změnit odkazem v patičce.",
+    "save": "Uložit nastavení",
+    "necessary": "Nutné",
+    "necessaryDescription": "Zajišťují základní funkce webu, třeba jazyk nebo tuto volbu. Nelze je vypnout.",
+    "analytics": "Analytické",
+    "analyticsDescription": "Pomáhají nám pochopit, jak web používáte.",
+    "marketing": "Marketingové",
+    "marketingDescription": "Slouží k měření a cílení reklamy.",
+    "openSettings": "Nastavení cookies"
   }
 }

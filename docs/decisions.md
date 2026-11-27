@@ -2,6 +2,14 @@
 
 One entry per decision: what was decided, why, and where it lives in the code. Add an entry in the same change that makes the decision. Do not rewrite old entries; add a new one that supersedes them.
 
+## 2026-11-27 — Cookie consent is part of the template, not a hosted service (BF-1000)
+
+**What.** The template ships its own consent banner (`features/consent`) with three categories and a versioned cookie. The consent state is a shared contract in `lib/consent`.
+
+**Why.** Hosted consent platforms (Cookiebot, CookieYes and others) cost money per site, load a third-party script before anything else, and differ between clients. Most of our sites need three categories and Google Consent Mode, which a small banner covers. A project that must use a client's platform removes `features/consent` and implements `lib/consent/client.ts` on top of that platform; analytics keeps working because it reads only the contract. The legal wording stays out of the template on purpose: it differs per client, and a filled-in text invites leaving it unchanged.
+
+**Where.** `lib/consent/`, `features/consent/`, `app/(frontend)/[locale]/layout.tsx`, `playwright.config.ts`.
+
 ## 2026-11-27 — Rate limits live in Postgres (BF-995)
 
 **What.** `lib/rate-limit` counts accepted requests per client in the `rate-limit-hits` collection. The contact form allows five messages per visitor in ten minutes. The client is the first `x-forwarded-for` address, stored only as an HMAC keyed with `PAYLOAD_SECRET`.

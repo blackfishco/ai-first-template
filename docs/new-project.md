@@ -23,7 +23,8 @@ The template ships more than every project needs. Remove what this one does not,
 
 - the second language;
 - the contact form and e-mail;
-- TanStack Query.
+- TanStack Query;
+- the cookie consent banner.
 
 Keep the tests, the environment validation, and the migrations workflow.
 
@@ -71,3 +72,4 @@ Follow [the activation checklist](verification.md#github-activation-pending): re
 - [ ] `/robots.txt` on production allows indexing and lists the sitemap; a preview disallows everything.
 - [ ] The site was checked by hand on a phone and a desktop, in every language.
 - [ ] Redirects from the old site, if there was one, are entered in the admin.
+- [ ] The cookie banner texts in `messages/*.json` (`Consent`) are replaced with the legal wording; no text starts with "ZÁSTUPNÝ TEXT" or "PLACEHOLDER TEXT".
