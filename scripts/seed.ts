@@ -227,7 +227,7 @@ async function seed(): Promise<void> {
   try {
     const imageId = await seedImage(payload, req);
     const pageIds: Record<string, number> = {};
-    for (const page of seedPages(imageId)) {
+    for (const page of seedPages()) {
       pageIds[page.slug] = await seedPage(payload, req, page);
     }
     await seedSiteSettings(payload, req, pageIds, imageId);

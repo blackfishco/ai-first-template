@@ -59,7 +59,7 @@ export const SEED_IMAGE_ALT: Localized<string> = {
   en: "Abstract colour gradient",
 };
 
-export function seedPages(imageId: number): SeedPage[] {
+export function seedPages(): SeedPage[] {
   return [
     {
       slug: "home",
@@ -72,7 +72,6 @@ export function seedPages(imageId: number): SeedPage[] {
               blockType: "hero",
               heading: "Web připravený k úpravám",
               lead: "Tuhle stránku vytvořil seed. Upravte ji v administraci, nebo ji smažte a začněte po svém.",
-              image: imageId,
             },
             {
               blockType: "richText",
@@ -96,7 +95,6 @@ export function seedPages(imageId: number): SeedPage[] {
               blockType: "hero",
               heading: "A site ready to edit",
               lead: "The seed created this page. Edit it in the admin, or delete it and start your own way.",
-              image: imageId,
             },
             {
               blockType: "richText",

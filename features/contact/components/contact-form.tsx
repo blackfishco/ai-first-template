@@ -1,10 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ResultAsync } from "neverthrow";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { type Resolver, useForm } from "react-hook-form";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -24,12 +23,24 @@ import { submitContactAction } from "../actions";
 import {
   CONTACT_FIELDS,
   type ContactFormValues,
-  contactSchema,
   FIELD_ERROR_CODES,
   type FieldErrorCode,
   MESSAGE_MAX_LENGTH,
   MESSAGE_MIN_LENGTH,
-} from "../schema";
+} from "../fields";
+
+/**
+ * Validates with the shared zod schema, loaded on the first validation. zod is
+ * the largest part of the form's code; a visitor who only reads the page never
+ * downloads it.
+ */
+const resolver: Resolver<ContactFormValues> = async (values, context, options) => {
+  const [{ zodResolver }, { contactSchema }] = await Promise.all([
+    import("@hookform/resolvers/zod"),
+    import("../schema"),
+  ]);
+  return zodResolver(contactSchema)(values, context, options);
+};
 
 type Status = "idle" | "sent" | "unavailable" | "limited";
 
@@ -50,7 +61,7 @@ export function ContactForm() {
     setError,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormValues>({
-    resolver: zodResolver(contactSchema),
+    resolver,
     defaultValues: EMPTY,
   });
 

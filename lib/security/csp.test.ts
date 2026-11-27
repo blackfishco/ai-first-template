@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { buildCsp, createNonce, CSP_SOURCES, cspHeaderName } from "./csp";
+import {
+  buildCsp,
+  createNonce,
+  CSP_SOURCES,
+  cspHeaderName,
+  nonceFromPolicy,
+} from "./csp";
 
 function directives(policy: string): Map<string, string[]> {
   return new Map(
@@ -66,5 +72,16 @@ describe("createNonce", () => {
 
     expect(nonces.size).toBe(50);
     for (const nonce of nonces) expect(nonce).toMatch(/^[A-Za-z0-9+/=]{16,}$/);
+  });
+});
+
+describe("nonceFromPolicy", () => {
+  it("reads the nonce of a built policy", () => {
+    expect(nonceFromPolicy(buildCsp(production))).toBe("abc123");
+  });
+
+  it("returns undefined without a policy or a nonce", () => {
+    expect(nonceFromPolicy(null)).toBeUndefined();
+    expect(nonceFromPolicy("default-src 'self'")).toBeUndefined();
   });
 });

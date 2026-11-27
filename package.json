@@ -25,7 +25,7 @@
     "test:watch": "vitest",
     "test:int": "node scripts/check-test-database.ts && payload migrate && vitest run --config vitest.int.config.ts",
     "test:e2e": "playwright test",
-    "lighthouse": "lhci autorun && node scripts/lighthouse-summary.ts",
+    "lighthouse": "lhci autorun; status=$?; node scripts/lighthouse-summary.ts; exit $status",
     "prepare": "husky"
   },
   "dependencies": {

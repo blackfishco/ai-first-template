@@ -56,7 +56,7 @@ Nothing in the template uses it yet; it is wired in for client-owned server stat
 Remove it only when the site sets no cookies beyond the necessary ones and loads no analytics or marketing scripts. Remove the analytics feature first if it is there; it reads consent.
 
 1. Delete `features/consent/`, `lib/consent/`, and `e2e/consent.spec.ts`.
-2. `app/(frontend)/[locale]/layout.tsx`: remove `<ConsentManager />` and the `<ConsentSettingsLink />` passed to `SiteFooter`.
+2. `app/(frontend)/[locale]/layout.tsx`: remove `<ConsentManager />`, the `<ConsentSettingsLink />` passed to `SiteFooter`, and the consent `<script>` in `<head>` with `suppressHydrationWarning` on `<html>`.
 3. Remove the `Consent` messages from `messages/*.json`.
 4. `playwright.config.ts`: remove the `consent` cookie from `storageState`.
 5. Remove `@axe-core/playwright` if no other test uses it.

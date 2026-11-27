@@ -1,10 +1,18 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
+import type { z } from "zod";
 
 import {
+  type ContactFormValues,
   MESSAGE_MAX_LENGTH,
   NAME_MAX_LENGTH,
-  parseContactInput,
-} from "./schema";
+} from "./fields";
+import { type contactSchema, parseContactInput } from "./schema";
+
+describe("ContactFormValues", () => {
+  it("matches what the zod schema accepts", () => {
+    expectTypeOf<z.input<typeof contactSchema>>().toEqualTypeOf<ContactFormValues>();
+  });
+});
 
 const valid = {
   name: "  Jana Nováková ",

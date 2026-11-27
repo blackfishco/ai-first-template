@@ -27,9 +27,19 @@ Stop the server after verification. Report commands, results, manual checks, and
 
 ## Performance (Lighthouse)
 
-The CI job "Lighthouse" builds the seeded site and measures `/` and `/kontakt` three times each on a simulated phone. The job summary shows the scores; the full reports are in the job's artifacts. Budgets live in [`lighthouserc.json`](../lighthouserc.json): performance and best practices 90, accessibility 95, SEO 90.
+The CI job "Lighthouse" builds the seeded site and measures `/` and `/kontakt` five times each on a simulated phone. The job summary shows the scores of the median runs; the full reports are in the job's artifacts.
 
-The budgets only warn for now. CI machines vary, so a single run can drop a few points without a real change. Make them blocking (change `"warn"` to `"error"` in `lighthouserc.json`) once a project has its real design and content and the scores stay above the budget for a couple of weeks.
+Budgets in [`lighthouserc.json`](../lighthouserc.json) fail the job:
+
+- **Accessibility, best practices, SEO: 100.** These audits are deterministic; anything less is a real defect.
+- **Performance: at least 95.** The template scores 98–100. The rest is the evaluation of the React and Next.js runtime under the simulated 4× slower CPU, which moves a few points between runs on the same build. 95 catches a real regression (a large image, a heavy library on every page) without failing on that noise.
+
+What keeps the template at the top, and what a project must not undo:
+
+- The cookie banner is in the static HTML and paints with the page; a head script hides it for visitors who have decided. Rendered only on the client, it became the largest paint at about 4 s.
+- Feature code that only some pages need loads in its own chunk: routes pass `LazyContactForm`, not the form, and the form loads zod on its first validation.
+- The consent settings dialog loads when a visitor opens it.
+- No large image above the fold without `priority` and proper sizes.
 
 Locally, after `pnpm build` with `SITE_URL=http://127.0.0.1:3100 ALLOW_INDEXING=true` (otherwise SEO counts the non-production noindex and canonical host):
 

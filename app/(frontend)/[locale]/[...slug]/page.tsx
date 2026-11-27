@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { ContactForm } from "@/features/contact/components/contact-form";
+import { LazyContactForm } from "@/features/contact/components/contact-form-lazy";
 import { CmsPage } from "@/features/pages/components/cms-page";
 import { getPageMetadata } from "@/features/pages/server/get-page-metadata";
 import { env } from "@/lib/env";
@@ -40,5 +40,5 @@ export default async function Page({
     notFound();
   }
 
-  return <CmsPage slug={slug} slots={{ contactForm: <ContactForm /> }} />;
+  return <CmsPage slug={slug} slots={{ contactForm: <LazyContactForm /> }} />;
 }
