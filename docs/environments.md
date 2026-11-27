@@ -18,7 +18,7 @@ What each environment uses. Fill in the project's real names in a copy of the se
 
 **Preview and production never share a database.** A build migrates the database its `DATABASE_URL` points at. With a shared database, the preview of an unmerged branch migrates production.
 
-The build script ([`scripts/vercel-build.ts`](../scripts/vercel-build.ts)) therefore skips migrations on preview builds until the project sets `PREVIEW_DATABASE_ISOLATED=true`. Set it only after every preview gets its own database, for example with the Neon integration for Vercel, which creates a database branch per preview and replaces `DATABASE_URL` for it. Until then a preview that needs a new migration fails at runtime on purpose; it does not touch production.
+The build script ([`scripts/vercel-build.ts`](../scripts/vercel-build.ts)) therefore skips migrations on preview builds until the project sets `PREVIEW_DATABASE_ISOLATED=true`. Set it only after every preview gets its own database, for example with the Neon integration for Vercel, which creates a database branch per preview and replaces `DATABASE_URL` for it. Until then the build of a preview whose database lacks a migration fails on purpose, when it prerenders the first page; it does not touch production.
 
 ## Variables
 
@@ -42,12 +42,23 @@ Use a different secret in every environment. A secret copied from production to 
 
 ## Vercel
 
-1. Create the project with the framework preset Next.js. The build command stays the default: Vercel runs the `vercel-build` script.
-2. Add a Postgres database and connect it so that production and preview get separate databases. Then set `PREVIEW_DATABASE_ISOLATED=true` for the Preview environment.
-3. Add a Blob store and connect it; it sets `BLOB_READ_WRITE_TOKEN`.
+The steps below were run once against a new project (BF-988). Do them in this order: the first deployment of a new project goes to production whatever branch it comes from, so a push before the database exists produces a failed production build.
+
+1. Create the project with the framework preset Next.js and connect the repository. The build command stays the default: Vercel runs the `vercel-build` script. Set the Node.js version to 24.x in the project settings; new projects may default to a newer one.
+2. Add a Postgres database so that production and preview get separate databases. Either way works:
+   - The Neon integration (Storage → Create Database → Neon), with a database branch per preview deployment switched on. It sets `DATABASE_URL` for each environment.
+   - Two connection strings set by hand: `DATABASE_URL` for Production and another for Preview, for example two branches of one Neon project. Neon's pooled connection string works for migrations.
+
+   Then set `PREVIEW_DATABASE_ISOLATED=true` for the Preview environment. Without it the preview build prints `Skipping database migrations` and fails on an empty database.
+3. Add a Blob store and connect it; it sets `BLOB_READ_WRITE_TOKEN`. Without it the build warns that the `media` collection has no storage adapter, and uploads do not work on Vercel.
 4. Set `PAYLOAD_SECRET`, `PREVIEW_SECRET`, and `CRON_SECRET` per environment. Vercel Cron sends `CRON_SECRET` automatically.
-5. Deploy, open `/admin`, and create the first user, who becomes an admin.
+5. Deploy. The production build log shows `Running database migrations: Production build.` followed by each migration. Open `/admin` and create the first user, who becomes an admin.
 6. Check `/api/health` (200) and that a preview responds with `X-Robots-Tag: noindex, nofollow`.
+
+Two things about a new Vercel project that look like bugs and are not:
+
+- **Deployment addresses ask for a Vercel login.** A team's new projects have Vercel Authentication on for every address except custom domains. An uptime monitor or a client therefore needs the custom domain, or a protection bypass set up in the project settings.
+- **Vercel adds `X-Robots-Tag: noindex` to `*.vercel.app` addresses itself,** on production too. The header this app sends on non-production deployments is `noindex, nofollow`. Judge production by its custom domain and by `/robots.txt`, which must say `Allow: /`.
 
 ## Other hosts (Docker, Kubernetes)
 
