@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -19,12 +20,19 @@ import {
 } from "@/lib/consent/client";
 import { ACCEPT_ALL, REJECT_ALL } from "@/lib/consent/consent";
 
-import { ConsentSettingsDialog } from "./consent-settings-dialog";
+// The dialog and its switches load when a visitor opens the settings.
+const ConsentSettingsDialog = dynamic(() =>
+  import("./consent-settings-dialog").then((module) => module.ConsentSettingsDialog),
+);
 
 /**
  * Asks for cookie consent on the first visit and opens the settings whenever
- * something calls `openConsentSettings()`. Renders nothing on the server, so
- * pages stay static; the banner floats over the page and moves no content.
+ * something calls `openConsentSettings()`.
+ *
+ * The banner is part of the static HTML, so it paints with the page rather
+ * than after the JavaScript. For a visitor who has already decided, the head
+ * script from `consentBootScript()` marks `<html>` and CSS hides the banner
+ * until React removes it. It floats over the page and moves no content.
  */
 export function ConsentManager() {
   const t = useTranslations("Consent");
@@ -35,14 +43,14 @@ export function ConsentManager() {
   useEffect(() => onOpenConsentSettings(() => setSettingsOpen(true)), []);
 
   const current = consent.status === "decided" ? consent.choice : REJECT_ALL;
-  const showBanner = consent.status === "undecided" && !settingsOpen;
+  const showBanner = consent.status !== "decided" && !settingsOpen;
 
   return (
     <>
       {showBanner ? (
         <section
           aria-label={t("bannerLabel")}
-          className="fixed inset-x-4 bottom-4 z-40 mx-auto max-w-2xl"
+          className="fixed inset-x-4 bottom-4 z-40 mx-auto max-w-2xl [html[data-consent=decided]_&]:hidden"
         >
           <Card>
             <CardHeader>
@@ -66,15 +74,17 @@ export function ConsentManager() {
           </Card>
         </section>
       ) : null}
-      <ConsentSettingsDialog
-        open={settingsOpen}
-        onOpenChange={setSettingsOpen}
-        current={current}
-        onSave={(choice) => {
-          saveConsent(choice);
-          setSettingsOpen(false);
-        }}
-      />
+      {settingsOpen ? (
+        <ConsentSettingsDialog
+          open
+          onOpenChange={setSettingsOpen}
+          current={current}
+          onSave={(choice) => {
+            saveConsent(choice);
+            setSettingsOpen(false);
+          }}
+        />
+      ) : null}
     </>
   );
 }

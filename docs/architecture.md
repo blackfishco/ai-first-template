@@ -18,8 +18,8 @@ app ───────────→ shared modules
 
 The contact form is the reference for a form that writes data. Start at [`features/contact/components/contact-form.tsx`](../features/contact/components/contact-form.tsx) and follow its imports.
 
-1. [`schema.ts`](../features/contact/schema.ts) defines the fields once. Validation messages are error codes, not text. `parseContactInput` returns a `Result` and never echoes submitted values.
-2. The form uses React Hook Form with the same schema, so most mistakes are caught before a request. It translates error codes with next-intl.
+1. [`fields.ts`](../features/contact/fields.ts) holds the field names, limits, and error codes; [`schema.ts`](../features/contact/schema.ts) builds the zod schema from them. Validation messages are error codes, not text. `parseContactInput` returns a `Result` and never echoes submitted values.
+2. The form uses React Hook Form with the same schema, loaded on the first validation so readers of the page never download zod. Most mistakes are caught before a request. It translates error codes with next-intl.
 3. [`submitContactAction`](../features/contact/actions.ts) treats its arguments as untrusted and validates them again on the server. It receives the language as an argument, because a Server Action runs outside a route and cannot read the `[locale]` segment.
 4. [`submitContactMessage`](../features/contact/server/submit-message.ts) returns a `ResultAsync`. It checks the rate limit, stores the message, and then notifies the owner; a failed notification is logged and does not fail the submission.
 5. The action converts the result to a plain union with safe codes. The form branches on it: field errors next to fields, an alert when the server cannot be reached or the visitor is over the limit, and a confirmation on success.
@@ -28,7 +28,7 @@ The message is written with `overrideAccess: true` because an anonymous visitor 
 
 **Rate limit.** A visitor may send five messages in ten minutes ([`CONTACT_RATE_LIMIT`](../features/contact/server/submit-message.ts)). [`lib/rate-limit`](../lib/rate-limit/) stores accepted requests in the `rate-limit-hits` collection, so the limit holds across server instances. The client is identified by its IP address from the request headers, stored only as an HMAC keyed with `PAYLOAD_SECRET`. Any Server Action that writes data or sends e-mail on behalf of an anonymous visitor uses the same module with its own scope and rule.
 
-The form's block shows how a page block uses a feature: [`components/sections/contact-form.tsx`](../components/sections/contact-form.tsx) renders a slot, and the route passes `<ContactForm />` into it, because shared components do not import features.
+The form's block shows how a page block uses a feature: [`components/sections/contact-form.tsx`](../components/sections/contact-form.tsx) renders a slot, and the route passes `<LazyContactForm />` into it, because shared components do not import features. The lazy wrapper keeps the form's code out of pages that have no form block: a Server Component cannot split a Client Component it imports.
 
 ## Real data boundaries
 
@@ -80,7 +80,7 @@ Payload runs inside the same Next.js app. The site lives in the `app/(frontend)`
 
 - **The contract is shared, the UI is a feature.** [`lib/consent/consent.ts`](../lib/consent/consent.ts) defines the categories and the stored format; [`lib/consent/client.ts`](../lib/consent/client.ts) gives `useConsent()`, `saveConsent()`, and `openConsentSettings()`. A feature that needs consent, such as analytics, reads it there and never imports `features/consent`.
 - **Stored in one cookie,** `consent`, with a version: `1.10` means version 1, analytics on, marketing off. Raise `CONSENT_VERSION` when the categories or what they cover change; every visitor is then asked again. The cookie is necessary and is kept for six months.
-- **Pages stay static.** The server never reads the cookie. `useConsent()` reports `unknown` until the page hydrates, so nothing that depends on consent renders on the server. The banner floats over the page and moves no content.
+- **Pages stay static.** The server never reads the cookie. The banner is in the static HTML so it paints with the page; a script in `<head>` (`consentBootScript()`) marks `<html data-consent="decided">` for visitors who already chose, and CSS hides the banner before the first paint. `useConsent()` reports `unknown` until the page hydrates. The banner floats over the page and moves no content.
 - **The texts are placeholders,** marked as such in `messages/*.json`. The legal wording comes from the project before launch.
 - **End-to-end tests** start with the banner already answered (rejected), set in `playwright.config.ts`; `e2e/consent.spec.ts` starts as a first-time visitor.
 

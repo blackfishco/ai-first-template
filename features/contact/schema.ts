@@ -1,10 +1,16 @@
 import { err, ok, type Result } from "neverthrow";
 import { z } from "zod";
 
-export const NAME_MAX_LENGTH = 100;
-export const EMAIL_MAX_LENGTH = 200;
-export const MESSAGE_MIN_LENGTH = 10;
-export const MESSAGE_MAX_LENGTH = 2000;
+import {
+  CONTACT_FIELDS,
+  type ContactField,
+  EMAIL_MAX_LENGTH,
+  FIELD_ERROR_CODES,
+  type FieldErrorCode,
+  MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
+  NAME_MAX_LENGTH,
+} from "./fields";
 
 /**
  * Validation messages are error codes, not text. The form translates them, so
@@ -27,19 +33,7 @@ export const contactSchema = z.object({
   website: z.string().max(0, "REJECTED").default(""),
 });
 
-export type ContactFormValues = z.input<typeof contactSchema>;
 export type ContactInput = z.output<typeof contactSchema>;
-
-export const CONTACT_FIELDS = ["name", "email", "message"] as const;
-export type ContactField = (typeof CONTACT_FIELDS)[number];
-
-export const FIELD_ERROR_CODES = [
-  "REQUIRED",
-  "TOO_SHORT",
-  "TOO_LONG",
-  "INVALID_EMAIL",
-] as const;
-export type FieldErrorCode = (typeof FIELD_ERROR_CODES)[number];
 
 export interface InvalidContactInput {
   code: "INVALID_INPUT";

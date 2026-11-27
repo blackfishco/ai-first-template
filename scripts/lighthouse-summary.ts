@@ -36,7 +36,7 @@ const table = [
   `| --- | ${CATEGORIES.map(() => "---").join(" | ")} |`,
   ...rows,
   "",
-  "Budgets are warnings only; see docs/verification.md. Full reports are in the job's artifacts.",
+  "Budgets: accessibility, best practices and SEO 100, performance at least 95; see docs/verification.md. Full reports are in the job's artifacts.",
   "",
 ].join("\n");
 

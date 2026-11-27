@@ -1,4 +1,4 @@
-import type { ContactField, FieldErrorCode } from "./schema";
+import type { ContactField, FieldErrorCode } from "./fields";
 
 /** What the contact Server Action returns to the browser: plain data, safe codes only. */
 export type ContactResult =

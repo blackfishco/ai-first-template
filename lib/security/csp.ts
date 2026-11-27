@@ -69,3 +69,8 @@ export function cspHeaderName(mode: CspMode): string | null {
 export function createNonce(): string {
   return btoa(crypto.randomUUID());
 }
+
+/** The nonce in a policy built by `buildCsp`, for inline scripts the app renders itself. */
+export function nonceFromPolicy(policy: string | null | undefined): string | undefined {
+  return /'nonce-([^']+)'/.exec(policy ?? "")?.[1];
+}

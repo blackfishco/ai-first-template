@@ -10,7 +10,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { ContactForm } from "@/features/contact/components/contact-form";
+import { LazyContactForm } from "@/features/contact/components/contact-form-lazy";
 import { CmsPage } from "@/features/pages/components/cms-page";
 import { getPageMetadata } from "@/features/pages/server/get-page-metadata";
 import { HOME_SLUG } from "@/lib/slug";
@@ -24,7 +24,7 @@ export default function Home() {
   return (
     <CmsPage
       slug={HOME_SLUG}
-      slots={{ contactForm: <ContactForm /> }}
+      slots={{ contactForm: <LazyContactForm /> }}
       fallback={<NoHomePage />}
     />
   );

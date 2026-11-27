@@ -1,9 +1,12 @@
+import { runInNewContext } from "node:vm";
+
 import { describe, expect, it } from "vitest";
 
 import {
   ACCEPT_ALL,
   CONSENT_COOKIE,
   CONSENT_MAX_AGE_SECONDS,
+  consentBootScript,
   consentCookie,
   consentFromCookies,
   parseConsent,
@@ -64,5 +67,39 @@ describe("consentCookie", () => {
 
   it("is secure on HTTPS", () => {
     expect(consentCookie(REJECT_ALL, true)).toContain("; Secure");
+  });
+});
+
+describe("consentBootScript", () => {
+  function run(cookie: string): string | null {
+    let marked: string | null = null;
+    const document = {
+      cookie,
+      documentElement: {
+        setAttribute: (name: string, value: string) => {
+          marked = `${name}=${value}`;
+        },
+      },
+    };
+    // The script runs in the page's <head>; here it gets a stand-in document.
+    runInNewContext(consentBootScript(), { document });
+    return marked;
+  }
+
+  it("marks a visitor with a current choice", () => {
+    expect(run(`NEXT_LOCALE=cs; ${CONSENT_COOKIE}=${serializeConsent(REJECT_ALL)}`)).toBe(
+      "data-consent=decided",
+    );
+    expect(run(`${CONSENT_COOKIE}=${serializeConsent(ACCEPT_ALL)}; other=1`)).toBe(
+      "data-consent=decided",
+    );
+  });
+
+  it("leaves a visitor without a valid, current choice", () => {
+    expect(run("")).toBeNull();
+    expect(run(`${CONSENT_COOKIE}=${serializeConsent(ACCEPT_ALL, 0)}`)).toBeNull();
+    expect(run(`${CONSENT_COOKIE}=1.1`)).toBeNull();
+    expect(run(`${CONSENT_COOKIE}=nonsense`)).toBeNull();
+    expect(run(`my${CONSENT_COOKIE}=1.11`)).toBeNull();
   });
 });

@@ -76,3 +76,17 @@ export function consentCookie(choice: ConsentChoice, secure: boolean): string {
   if (secure) attributes.push("Secure");
   return attributes.join("; ");
 }
+
+/** Set on `<html>` before the page paints when the visitor has decided. */
+export const CONSENT_DECIDED_ATTRIBUTE = "data-consent";
+
+/**
+ * A tiny script for `<head>`. The banner is part of the static HTML so it
+ * paints with the page instead of after the JavaScript; for a visitor who has
+ * already decided, this script marks `<html>` before the first paint and CSS
+ * hides the banner. It checks the version and the shape like `parseConsent`.
+ */
+export function consentBootScript(): string {
+  const pattern = `(?:^|; )${CONSENT_COOKIE}=${CONSENT_VERSION}\\.[01]{${OPTIONAL_CATEGORIES.length}}(?:;|$)`;
+  return `try{if(new RegExp(${JSON.stringify(pattern)}).test(document.cookie))document.documentElement.setAttribute(${JSON.stringify(CONSENT_DECIDED_ATTRIBUTE)},"decided")}catch(e){}`;
+}

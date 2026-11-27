@@ -2,7 +2,7 @@ import "../../globals.css";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
-import { draftMode } from "next/headers";
+import { draftMode, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { NextIntlClientProvider } from "next-intl";
@@ -17,7 +17,9 @@ import { ConsentManager } from "@/features/consent/components/consent-manager";
 import { ConsentSettingsLink } from "@/features/consent/components/consent-settings-link";
 import { isLocale, LOCALES } from "@/i18n/config";
 import { isAnalyticsEnabled, tagKind } from "@/lib/analytics/tag-id";
+import { consentBootScript } from "@/lib/consent/consent";
 import { env } from "@/lib/env";
+import { nonceFromPolicy } from "@/lib/security/csp";
 import { getSiteSettings } from "@/lib/site-settings/server";
 import { cn } from "@/lib/utils";
 
@@ -54,6 +56,11 @@ export default async function RootLayout({
 
   // A nonce is per request, so with a policy on, every page renders per request.
   if (env.CSP_MODE !== "off") await connection();
+  // With a policy, the inline consent script needs this request's nonce.
+  const nonce =
+    env.CSP_MODE === "off"
+      ? undefined
+      : nonceFromPolicy((await headers()).get("content-security-policy"));
 
   const t = await getTranslations({ locale, namespace: "Site" });
   const settings = await getSiteSettings(locale).match(
@@ -78,7 +85,17 @@ export default async function RootLayout({
         geistMono.variable,
         inter.variable,
       )}
+      // The consent script below sets an attribute here before React hydrates.
+      suppressHydrationWarning
     >
+      <head>
+        <script
+          nonce={nonce}
+          // A fixed string built from constants, never from request data.
+           
+          dangerouslySetInnerHTML={{ __html: consentBootScript() }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <AppProviders>
