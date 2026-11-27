@@ -53,9 +53,11 @@ Follow [environments](environments.md#vercel). The points that cause trouble lat
 
 After the first deploy: create the first account on production, check `/api/health`, and check that a preview answers with `X-Robots-Tag: noindex, nofollow`.
 
-## 6. Protect the main branch
+## 6. Protect the main branch and keep dependencies current
 
 Follow [the activation checklist](verification.md#github-activation-pending): require pull requests and the `Quality checks` status. Verify the rule blocks a failing pull request before relying on it.
+
+Install the [Renovate](https://github.com/apps/renovate) GitHub app on the new repository (an organization owner can do it for all repositories at once). [`renovate.json`](../renovate.json) comes with the template; Renovate first opens an onboarding pull request and then the update pull requests every Monday. Merge them like any other pull request: after green checks.
 
 ## 7. Set up the work
 

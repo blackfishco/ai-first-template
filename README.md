@@ -86,4 +86,6 @@ Tests do not replace looking at the site; see [verification](docs/verification.m
 
 A passing workflow does not mean merges are blocked. Branch protection is a setting on GitHub; follow [the activation checklist](docs/verification.md#github-activation-pending) and do not claim protection before verifying it there.
 
+Dependency updates come from [Renovate](renovate.json): one batch of pull requests on Monday mornings, security fixes at any time. Payload, Next.js, and React packages arrive grouped; the version ceilings in [decisions](docs/decisions.md) are respected. A new project inherits the configuration; the Renovate app must be installed on its repository.
+
 Deployment targets Vercel with a Postgres database per environment and Vercel Blob for media; see [environments](docs/environments.md), which also covers other hosts.

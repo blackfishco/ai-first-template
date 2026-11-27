@@ -23,6 +23,14 @@ One entry per decision: what was decided, why, and where it lives in the code. A
 
 **Where.** `lib/consent/`, `features/consent/`, `app/(frontend)/[locale]/layout.tsx`, `playwright.config.ts`.
 
+## 2026-11-27 — Renovate keeps dependencies current (BF-996)
+
+**What.** [`renovate.json`](../renovate.json) opens update pull requests once a week (Monday before 6:00 Prague time), at most five open at a time, and security fixes immediately. Payload, Next.js, and React packages are grouped; small updates of development tools come as one pull request. Commits use the `deps` scope that commitlint accepts.
+
+**Why.** The template is current on the day it is copied and outdated three months later; every project made from it would start with that debt. Renovate rather than Dependabot because it can group packages that must move together (all `@payloadcms/*` on one exact version), enforce the version ceilings recorded in BF-967 with `allowedVersions`, and wait for a minimum release age like pnpm does. Releases younger than three days are not proposed, which matches pnpm's supply-chain guard.
+
+**Where.** `renovate.json`. When a ceiling in "Dependency ceilings" changes, change its `allowedVersions` rule in the same pull request.
+
 ## 2026-11-27 — Rate limits live in Postgres (BF-995)
 
 **What.** `lib/rate-limit` counts accepted requests per client in the `rate-limit-hits` collection. The contact form allows five messages per visitor in ten minutes. The client is the first `x-forwarded-for` address, stored only as an HMAC keyed with `PAYLOAD_SECRET`.

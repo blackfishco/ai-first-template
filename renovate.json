@@ -1,0 +1,73 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Dependency updates for the template and every project made from it. See docs/decisions.md (BF-996).",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":semanticCommitScope(deps)"
+  ],
+  "timezone": "Europe/Prague",
+  "schedule": ["before 6am on monday"],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "minimumReleaseAge": "3 days",
+  "postUpdateOptions": ["pnpmDedupe"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on the first day of the month"]
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": ["at any time"],
+    "labels": ["security"]
+  },
+  "osvVulnerabilityAlerts": true,
+  "packageRules": [
+    {
+      "description": "Small updates of development tools come together.",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "development tools (minor and patch)"
+    },
+    {
+      "description": "Payload packages must stay on one exact version.",
+      "matchPackageNames": ["payload", "@payloadcms/**"],
+      "groupName": "Payload"
+    },
+    {
+      "description": "eslint-config-next follows the Next.js version.",
+      "matchPackageNames": ["next", "@next/**", "eslint-config-next"],
+      "groupName": "Next.js"
+    },
+    {
+      "description": "React and its types move together.",
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ],
+      "groupName": "React"
+    },
+    {
+      "description": "Ceiling: typescript-eslint 8 supports TypeScript <6.1 (docs/decisions.md).",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<6.1.0"
+    },
+    {
+      "description": "Ceiling: eslint-config-next pulls eslint-plugin-import 2, which supports ESLint up to 9.",
+      "matchPackageNames": ["eslint"],
+      "allowedVersions": "<10"
+    },
+    {
+      "description": "Ceiling: eslint-plugin-unicorn 66 and later require ESLint >=10.4.",
+      "matchPackageNames": ["eslint-plugin-unicorn"],
+      "allowedVersions": "<66"
+    },
+    {
+      "description": "Node.js stays on the 24 LTS line: the runtime, its types, and .node-version.",
+      "matchPackageNames": ["@types/node", "node"],
+      "allowedVersions": "<25"
+    }
+  ]
+}
