@@ -56,6 +56,8 @@ export default defineConfig({
     // Fixed test-only secret; e2e/preview.spec.ts uses the same value.
     env: {
       PREVIEW_SECRET: "e2e-preview-secret-0000000000000000",
+      // e2e/scheduled-publish.spec.ts calls the jobs endpoint like Vercel Cron.
+      CRON_SECRET: "e2e-cron-secret-000000",
       // e2e/analytics.spec.ts checks the Google tag; requests to Google are intercepted.
       ANALYTICS_ENABLED: "true",
     },
